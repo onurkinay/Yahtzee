@@ -5,7 +5,6 @@
  */
 package com.onurkinay.yahtzee;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -83,6 +82,7 @@ public class Game extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jTable1.setEnabled(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -110,16 +110,47 @@ public class Game extends javax.swing.JFrame {
         jLabel2.setText("ss");
         jLabel2.setMaximumSize(new java.awt.Dimension(253, 236));
         jLabel2.setMinimumSize(new java.awt.Dimension(253, 236));
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         jLabel3.setText("ss");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         jLabel4.setText("ss");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         jLabel5.setText("ss");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         jLabel6.setText("ss");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         jLabel7.setText("ss");
+        jLabel7.setName(""); // NOI18N
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                zarClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,7 +215,7 @@ public class Game extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         int row = jTable1.rowAtPoint(evt.getPoint());
-        
+
         int col = jTable1.columnAtPoint(evt.getPoint());
         if (row == 6 || row == 7 || row == 8 || row == 9) {
             jLabel1.setText("Cannot click!!");
@@ -199,35 +230,40 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+
         String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7};
         int delay = 0; // delay for 5 sec.
         int period = 100; // repeat every sec.
         Timer timer = new Timer();
-        
+
         timer.scheduleAtFixedRate(new TimerTask() {
             int i = 0;
-           
+
             public void run() {
                 for (JLabel img : images) {
                     img.setText("");
-                  
-                    
+
                     int k = 1 + (int) (Math.random() * ((5) + 1));
                     ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
                     Image image = icon.getImage();
                     Image newimg = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
                     img.setIcon(new ImageIcon(newimg));
-                     
+                    img.getAccessibleContext().setAccessibleDescription("" + k);
+
                 }
                 i++;
                 if (i >= 10) {
                     timer.cancel();
+                    Calculate();
                 }
             }
         }, delay, period);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void zarClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_zarClicked
+        
+    }//GEN-LAST:event_zarClicked
 
     /**
      * @param args the command line arguments
@@ -262,6 +298,46 @@ public class Game extends javax.swing.JFrame {
                 new Game().setVisible(true);
             }
         });
+    }
+
+    void Calculate() {
+        for (int j = 0; j < 17; j++) {
+            jTable1.setValueAt(null, j, 1);
+        }
+
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7};
+
+        for (JLabel img : images) {
+
+            //UPPER SECTION
+            for (int j = 0; j < 6; j++) {
+                if (Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) == (j + 1)) {
+                    int value = (jTable1.getValueAt(j, 1) == null) ? 0 : Integer.parseInt(jTable1.getValueAt(j, 1).toString());
+                    jTable1.setValueAt(value + j + 1, j, 1);
+                }
+            }
+        }
+        
+        //CHANCE
+           int value =  0;
+          for (JLabel img : images) {
+            value+=Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
+        } jTable1.setValueAt(value, 15, 1);
+
+        //YATZHEE
+        int same = 0;
+         for (JLabel img : images) {
+             if(same == 0){ Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());continue;}
+             if(same == Integer.parseInt(img.getAccessibleContext().getAccessibleDescription())){
+                 continue;
+             }else{
+                 same = -1;
+                 break;
+             } 
+        }
+         if(same != -1) {
+             jTable1.setValueAt(50, 16, 1);
+         }
     }
 
 
