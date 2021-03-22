@@ -51,6 +51,7 @@ public class Game extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -155,6 +156,9 @@ public class Game extends javax.swing.JFrame {
 
         getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 400, 120));
 
+        jLabel7.setText("jLabel7");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -172,49 +176,77 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
 
+    }//GEN-LAST:event_jButton1ActionPerformed
+    int tur = 0;
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
 
-        String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
-        ArrayList<JLabel> zarlar = new ArrayList<>();
-        for (Component gelenler : orta.getComponents()) {
-            if (gelenler instanceof JLabel) {
-                zarlar.add((JLabel) gelenler);
+        if (tur < 3) {
+            tur++;
+            String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
+            ArrayList<JLabel> zarlar = new ArrayList<>();
+            for (Component gelenler : orta.getComponents()) {
+                if (gelenler instanceof JLabel) {
+                    zarlar.add((JLabel) gelenler);
+                }
             }
+
+            int delay = 0; // delay for 5 sec.
+            int period = 100; // repeat every sec.
+            Timer timer = new Timer();
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                int i = 0;
+
+                public void run() {
+                    for (JLabel img : zarlar) {
+                        img.setText("");
+
+                        img.addMouseListener(oyuncuZarMouse);
+
+                        int k = 1 + (int) (Math.random() * ((5) + 1));
+                        ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
+                        Image image = icon.getImage();
+                        Image newimg = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+                        img.setIcon(new ImageIcon(newimg));
+                        img.getAccessibleContext().setAccessibleDescription("" + k);
+
+                    }
+                    i++;
+                    if (i >= 10) {
+                        jLabel1.setText(jLabel2.getLocation().toString());
+                        timer.cancel();
+                        Calculate();
+                        if (tur >= 3) {
+                            jLabel7.setText("Tur sayısı bitti");
+                            zarAt.setEnabled(false);
+
+                            for (JLabel img : zarlar) {
+                                img.setLocation(img.getLocation().x, 21);
+
+                                img.removeMouseListener(oyuncuZarMouse);
+                                img.removeMouseListener(ortaZarMouse);
+
+                                img.addMouseListener(ortaZarMouse);
+
+                                oyuncu.add(img);
+                                orta.remove(img);
+                            }
+
+                            for (Component gelenler : oyuncu.getComponents()) {
+                                if (gelenler instanceof JLabel) {
+                                   gelenler.removeMouseListener(ortaZarMouse);
+                                   gelenler.removeMouseListener(oyuncuZarMouse);
+                                }
+                            }
+
+                        } else {
+                            jLabel7.setText("Tur sayısı: " + tur);
+                        }
+                    }
+                }
+            }, delay, period);
         }
-
-        int delay = 0; // delay for 5 sec.
-        int period = 100; // repeat every sec.
-        Timer timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 0;
-
-            public void run() {
-                for (JLabel img : zarlar) {
-                    img.setText("");
-
-                    img.addMouseListener(oyuncuZarMouse);
-
-                    int k = 1 + (int) (Math.random() * ((5) + 1));
-                    ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
-                    Image image = icon.getImage();
-                    Image newimg = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
-                    img.setIcon(new ImageIcon(newimg));
-                    img.getAccessibleContext().setAccessibleDescription("" + k);
-
-                }
-                i++;
-                if (i >= 10) {
-                    jLabel1.setText(jLabel2.getLocation().toString());
-                    timer.cancel();
-                    Calculate();
-                }
-            }
-        }, delay, period);
-
     }//GEN-LAST:event_zarAtActionPerformed
 /////////////////////////////////////
     MouseAdapter ortaZarMouse = new MouseAdapter() {
@@ -233,7 +265,7 @@ public class Game extends javax.swing.JFrame {
 
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
         JLabel zar = (JLabel) evt.getComponent();
-        zar.setLocation(zar.getLocation().x , 21);
+        zar.setLocation(zar.getLocation().x, 21);
 
         zar.removeMouseListener(oyuncuZarMouse);
         zar.removeMouseListener(ortaZarMouse);
@@ -357,6 +389,7 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel orta;
