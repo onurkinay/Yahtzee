@@ -183,6 +183,13 @@ public class Game extends javax.swing.JFrame {
 
         if (tur < 3) {
             tur++;
+            for (Component gelenler : oyuncu.getComponents()) {
+                if (gelenler instanceof JLabel) {
+                    gelenler.removeMouseListener(ortaZarMouse);
+                    gelenler.removeMouseListener(oyuncuZarMouse);
+                }
+            }
+
             String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
             ArrayList<JLabel> zarlar = new ArrayList<>();
             for (Component gelenler : orta.getComponents()) {
@@ -235,8 +242,8 @@ public class Game extends javax.swing.JFrame {
 
                             for (Component gelenler : oyuncu.getComponents()) {
                                 if (gelenler instanceof JLabel) {
-                                   gelenler.removeMouseListener(ortaZarMouse);
-                                   gelenler.removeMouseListener(oyuncuZarMouse);
+                                    gelenler.removeMouseListener(ortaZarMouse);
+                                    gelenler.removeMouseListener(oyuncuZarMouse);
                                 }
                             }
 
