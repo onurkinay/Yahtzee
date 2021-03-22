@@ -44,7 +44,6 @@ public class Game extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         zarAt = new javax.swing.JButton();
-        oyuncu = new javax.swing.JPanel();
         orta = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -52,6 +51,7 @@ public class Game extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        oyuncu = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -119,46 +119,54 @@ public class Game extends javax.swing.JFrame {
         });
         getContentPane().add(zarAt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 552, 520, -1));
 
-        oyuncu.setBackground(new java.awt.Color(0, 204, 51));
-
-        javax.swing.GroupLayout oyuncuLayout = new javax.swing.GroupLayout(oyuncu);
-        oyuncu.setLayout(oyuncuLayout);
-        oyuncuLayout.setHorizontalGroup(
-            oyuncuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        oyuncuLayout.setVerticalGroup(
-            oyuncuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 107, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 427, 530, -1));
-
         orta.setBackground(new java.awt.Color(0, 204, 204));
         orta.setName("orta"); // NOI18N
-        orta.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        orta.setLayout(null);
 
         jLabel2.setText("ss");
         jLabel2.setMaximumSize(new java.awt.Dimension(253, 236));
         jLabel2.setMinimumSize(new java.awt.Dimension(253, 236));
-        orta.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
+        orta.add(jLabel2);
+        jLabel2.setBounds(40, 20, 50, 50);
 
         jLabel3.setText("ss");
-        orta.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
+        jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
+        orta.add(jLabel3);
+        jLabel3.setBounds(100, 20, 50, 50);
 
         jLabel4.setText("ss");
-        orta.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
+        jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel4.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
+        orta.add(jLabel4);
+        jLabel4.setBounds(160, 20, 50, 50);
 
         jLabel5.setText("ss");
-        orta.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, -1, -1));
+        jLabel5.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel5.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel5.setPreferredSize(new java.awt.Dimension(50, 50));
+        orta.add(jLabel5);
+        jLabel5.setBounds(220, 20, 50, 50);
 
         jLabel6.setText("ss");
-        orta.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
+        jLabel6.setMaximumSize(new java.awt.Dimension(50, 50));
+        jLabel6.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel6.setPreferredSize(new java.awt.Dimension(50, 50));
+        orta.add(jLabel6);
+        jLabel6.setBounds(280, 20, 50, 50);
 
-        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 400, 120));
+        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 400, 120));
 
         jLabel7.setText("jLabel7");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, -1, -1));
+
+        oyuncu.setBackground(new java.awt.Color(0, 204, 204));
+        oyuncu.setName("orta"); // NOI18N
+        oyuncu.setLayout(null);
+        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 400, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -180,26 +188,29 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        jTable1.setValueAt("*" + jTable1.getValueAt(secilen, 1).toString(), secilen, 1);
-        tur = 0;
-        zarAt.setEnabled(true);
-        for (Component zar : oyuncu.getComponents()) {
-            if (zar instanceof JLabel) {
+        if (secilen != -1) {
+            jTable1.setValueAt("*" + jTable1.getValueAt(secilen, 1).toString(), secilen, 1);
+            tur = 0;
+            zarAt.setEnabled(true);
+            for (Component zar : oyuncu.getComponents()) {
                
-                zar.setLocation(zar.getLocation().x, 20);
+                    zar.setLocation(zar.getLocation().x, 20);
+                    zar.removeMouseListener(ortaZarMouse);
+                    zar.removeMouseListener(oyuncuZarMouse);
 
-                zar.removeMouseListener(ortaZarMouse);
-                zar.removeMouseListener(oyuncuZarMouse);
+                    zar.addMouseListener(oyuncuZarMouse);
 
-                zar.addMouseListener(oyuncuZarMouse);
+                    
+                    oyuncu.remove(zar);
+                    orta.add(zar);
 
-                orta.add(zar);
-                oyuncu.remove(zar);
+                    refresh();
+                
             }
+
+        } else {
+            //herhangi bir seçim yapılmadı
         }
-
-
     }//GEN-LAST:event_jButton1ActionPerformed
     int tur = 0;
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
@@ -251,16 +262,19 @@ public class Game extends javax.swing.JFrame {
                             jLabel7.setText("Tur sayısı bitti");
                             zarAt.setEnabled(false);
 
-                            for (JLabel img : zarlar) {
-                                img.setLocation(img.getLocation().x, 21);
+                            for (Component img : zarlar) {
 
+                                img.setLocation(img.getLocation().x, 20);
                                 img.removeMouseListener(oyuncuZarMouse);
                                 img.removeMouseListener(ortaZarMouse);
 
                                 img.addMouseListener(ortaZarMouse);
 
-                                oyuncu.add(img);
+                                
                                 orta.remove(img);
+                                oyuncu.add(img);
+
+                                refresh();
                             }
 
                             for (Component gelenler : oyuncu.getComponents()) {
@@ -296,7 +310,8 @@ public class Game extends javax.swing.JFrame {
     };
 
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
-        JLabel zar = (JLabel) evt.getComponent();
+        Component zar =  evt.getComponent();
+
         zar.setLocation(zar.getLocation().x, 21);
 
         zar.removeMouseListener(oyuncuZarMouse);
@@ -304,12 +319,15 @@ public class Game extends javax.swing.JFrame {
 
         zar.addMouseListener(ortaZarMouse);
 
-        oyuncu.add(zar);
+        
         orta.remove(evt.getComponent());
+        oyuncu.add(zar);
+
+        refresh();
     }
 
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
-        JLabel zar = (JLabel) evt.getComponent();
+       Component zar =  evt.getComponent();
         zar.setLocation(zar.getLocation().x, 20);
 
         zar.removeMouseListener(ortaZarMouse);
@@ -317,8 +335,11 @@ public class Game extends javax.swing.JFrame {
 
         zar.addMouseListener(oyuncuZarMouse);
 
-        orta.add(zar);
+        
         oyuncu.remove(evt.getComponent());
+        orta.add(zar);
+
+        refresh();
     }
 
     //</editor-fold>
@@ -420,7 +441,10 @@ public class Game extends javax.swing.JFrame {
         }*/
     }
 
-
+    void refresh() {
+        orta.repaint();
+        oyuncu.repaint();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
