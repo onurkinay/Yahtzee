@@ -89,6 +89,7 @@ public class Game extends javax.swing.JFrame {
             }
         });
         jTable1.setEnabled(false);
+        jTable1.setShowGrid(true);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -143,16 +144,16 @@ public class Game extends javax.swing.JFrame {
         orta.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, -1, -1));
 
         jLabel3.setText("ss");
-        orta.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 20, -1, -1));
+        orta.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, -1, -1));
 
         jLabel4.setText("ss");
-        orta.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, -1, -1));
+        orta.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 20, -1, -1));
 
         jLabel5.setText("ss");
-        orta.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, -1, -1));
+        orta.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 20, -1, -1));
 
         jLabel6.setText("ss");
-        orta.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, -1, -1));
+        orta.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
 
         getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 400, 120));
 
@@ -162,20 +163,42 @@ public class Game extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    int secilen = -1;
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         int row = jTable1.rowAtPoint(evt.getPoint());
 
         int col = jTable1.columnAtPoint(evt.getPoint());
         if (row == 6 || row == 7 || row == 8 || row == 9) {
-            jLabel1.setText("Cannot click!!");
+            // jLabel1.setText("Cannot click!!");
         } else {
-            jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
+            // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
+            jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " seçildi");
+            secilen = row;
         }
 
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        jTable1.setValueAt("*" + jTable1.getValueAt(secilen, 1).toString(), secilen, 1);
+        tur = 0;
+        zarAt.setEnabled(true);
+        for (Component zar : oyuncu.getComponents()) {
+            if (zar instanceof JLabel) {
+               
+                zar.setLocation(zar.getLocation().x, 20);
+
+                zar.removeMouseListener(ortaZarMouse);
+                zar.removeMouseListener(oyuncuZarMouse);
+
+                zar.addMouseListener(oyuncuZarMouse);
+
+                orta.add(zar);
+                oyuncu.remove(zar);
+            }
+        }
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
     int tur = 0;
@@ -183,12 +206,12 @@ public class Game extends javax.swing.JFrame {
 
         if (tur < 3) {
             tur++;
-            for (Component gelenler : oyuncu.getComponents()) {
+            /*   for (Component gelenler : oyuncu.getComponents()) {
                 if (gelenler instanceof JLabel) {
                     gelenler.removeMouseListener(ortaZarMouse);
                     gelenler.removeMouseListener(oyuncuZarMouse);
                 }
-            }
+            }*/
 
             String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
             ArrayList<JLabel> zarlar = new ArrayList<>();
@@ -214,7 +237,7 @@ public class Game extends javax.swing.JFrame {
                         int k = 1 + (int) (Math.random() * ((5) + 1));
                         ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
                         Image image = icon.getImage();
-                        Image newimg = image.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+                        Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
                         img.setIcon(new ImageIcon(newimg));
                         img.getAccessibleContext().setAccessibleDescription("" + k);
 
@@ -254,8 +277,10 @@ public class Game extends javax.swing.JFrame {
                 }
             }, delay, period);
         }
+
     }//GEN-LAST:event_zarAtActionPerformed
-/////////////////////////////////////
+
+    // <editor-fold defaultstate="collapsed" desc="Zar alma ve verme">    
     MouseAdapter ortaZarMouse = new MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -296,7 +321,7 @@ public class Game extends javax.swing.JFrame {
         oyuncu.remove(evt.getComponent());
     }
 
-    //////////////////////////////////////
+    //</editor-fold>
     /**
      * @param args the command line arguments
      */
@@ -333,8 +358,12 @@ public class Game extends javax.swing.JFrame {
     }
 
     void Calculate() {
+
         for (int j = 0; j < 17; j++) {
-            jTable1.setValueAt(null, j, 1);
+            if (jTable1.getValueAt(j, 1) != null && "*".equals(jTable1.getValueAt(j, 1).toString().substring(0, 1))) {
+            } else {
+                jTable1.setValueAt(null, j, 1);
+            }
         }
 
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -344,8 +373,11 @@ public class Game extends javax.swing.JFrame {
             //UPPER SECTION
             for (int j = 0; j < 6; j++) {
                 if (Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) == (j + 1)) {
-                    int value = (jTable1.getValueAt(j, 1) == null) ? 0 : Integer.parseInt(jTable1.getValueAt(j, 1).toString());
-                    jTable1.setValueAt(value + j + 1, j, 1);
+                    if (jTable1.getValueAt(j, 1) != null && "*".equals(jTable1.getValueAt(j, 1).toString().substring(0, 1))) {
+                    } else {
+                        int value = (jTable1.getValueAt(j, 1) == null) ? 0 : Integer.parseInt(jTable1.getValueAt(j, 1).toString());
+                        jTable1.setValueAt(value + j + 1, j, 1);
+                    }
                 }
             }
         }
@@ -355,9 +387,11 @@ public class Game extends javax.swing.JFrame {
         for (JLabel img : images) {
             value += Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
         }
-        jTable1.setValueAt(value, 15, 1);
-
-        //YATZHEE
+        if (jTable1.getValueAt(15, 1) != null && "*".equals(jTable1.getValueAt(15, 1).toString().substring(0, 1))) {
+        } else {
+            jTable1.setValueAt(value, 15, 1);
+        }
+        /*   //YATZHEE
         int same = 0;
         for (JLabel img : images) {
             if (same == 0) {
@@ -383,8 +417,7 @@ public class Game extends javax.swing.JFrame {
         if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true && res[4] == true)
                 || (res[1] == true && res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
             jTable1.setValueAt(50, 14, 1);
-        }
-
+        }*/
     }
 
 
@@ -403,4 +436,5 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JPanel oyuncu;
     private javax.swing.JButton zarAt;
     // End of variables declaration//GEN-END:variables
+
 }
