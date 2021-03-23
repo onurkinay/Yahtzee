@@ -97,11 +97,11 @@ public class Game extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(627, 52, 289, 311));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 70, 289, 311));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("jLabel1");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(731, 369, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 380, -1, -1));
 
         jButton1.setText("Accept");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +109,7 @@ public class Game extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(627, 396, 289, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 410, 289, -1));
 
         zarAt.setText("Roll Dice");
         zarAt.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +117,7 @@ public class Game extends javax.swing.JFrame {
                 zarAtActionPerformed(evt);
             }
         });
-        getContentPane().add(zarAt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 552, 520, -1));
+        getContentPane().add(zarAt, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 552, 600, -1));
 
         orta.setBackground(new java.awt.Color(0, 204, 204));
         orta.setName("orta"); // NOI18N
@@ -128,45 +128,45 @@ public class Game extends javax.swing.JFrame {
         jLabel2.setMinimumSize(new java.awt.Dimension(253, 236));
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel2);
-        jLabel2.setBounds(40, 20, 50, 50);
+        jLabel2.setBounds(140, 30, 50, 50);
 
         jLabel3.setText("ss");
         jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel3);
-        jLabel3.setBounds(100, 20, 50, 50);
+        jLabel3.setBounds(200, 30, 50, 50);
 
         jLabel4.setText("ss");
         jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel4.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel4);
-        jLabel4.setBounds(160, 20, 50, 50);
+        jLabel4.setBounds(260, 30, 50, 50);
 
         jLabel5.setText("ss");
         jLabel5.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel5.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel5.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel5);
-        jLabel5.setBounds(220, 20, 50, 50);
+        jLabel5.setBounds(320, 30, 50, 50);
 
         jLabel6.setText("ss");
         jLabel6.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel6.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel6.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel6);
-        jLabel6.setBounds(280, 20, 50, 50);
+        jLabel6.setBounds(380, 30, 50, 50);
 
-        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, 400, 120));
+        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 600, 120));
 
         jLabel7.setText("jLabel7");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, -1, -1));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 380, -1, -1));
 
         oyuncu.setBackground(new java.awt.Color(0, 204, 204));
         oyuncu.setName("orta"); // NOI18N
         oyuncu.setLayout(null);
-        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 400, 120));
+        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 600, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -178,7 +178,8 @@ public class Game extends javax.swing.JFrame {
 
         int col = jTable1.columnAtPoint(evt.getPoint());
         if (row == 6 || row == 7 || row == 8 || row == 9) {
-            // jLabel1.setText("Cannot click!!");
+            jLabel1.setText("Hatalı Seçim");
+            secilen = -1;
         } else {
             // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
             jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " seçildi");
@@ -194,11 +195,11 @@ public class Game extends javax.swing.JFrame {
             zarAt.setEnabled(true);
             for (Component zar : oyuncu.getComponents()) {
                
-                    zar.setLocation(zar.getLocation().x, 20);
+                    zar.setLocation(zar.getLocation().x, 30);
                     zar.removeMouseListener(ortaZarMouse);
                     zar.removeMouseListener(oyuncuZarMouse);
 
-                    zar.addMouseListener(oyuncuZarMouse);
+                   // zar.addMouseListener(oyuncuZarMouse);
 
                     
                     oyuncu.remove(zar);
@@ -207,9 +208,11 @@ public class Game extends javax.swing.JFrame {
                     refresh();
                 
             }
+            jLabel7.setText("Yeni raund");
 
         } else {
             //herhangi bir seçim yapılmadı
+             jLabel1.setText("Herhangi bir seçim yapılmadı");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     int tur = 0;
@@ -255,7 +258,7 @@ public class Game extends javax.swing.JFrame {
                     }
                     i++;
                     if (i >= 10) {
-                        jLabel1.setText(jLabel2.getLocation().toString());
+                    
                         timer.cancel();
                         Calculate();
                         if (tur >= 3) {
@@ -264,7 +267,7 @@ public class Game extends javax.swing.JFrame {
 
                             for (Component img : zarlar) {
 
-                                img.setLocation(img.getLocation().x, 20);
+                                img.setLocation(img.getLocation().x, 30);
                                 img.removeMouseListener(oyuncuZarMouse);
                                 img.removeMouseListener(ortaZarMouse);
 
@@ -312,7 +315,7 @@ public class Game extends javax.swing.JFrame {
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
         Component zar =  evt.getComponent();
 
-        zar.setLocation(zar.getLocation().x, 21);
+        zar.setLocation(zar.getLocation().x, 31);
 
         zar.removeMouseListener(oyuncuZarMouse);
         zar.removeMouseListener(ortaZarMouse);
@@ -328,7 +331,7 @@ public class Game extends javax.swing.JFrame {
 
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
        Component zar =  evt.getComponent();
-        zar.setLocation(zar.getLocation().x, 20);
+        zar.setLocation(zar.getLocation().x, 30);
 
         zar.removeMouseListener(ortaZarMouse);
         zar.removeMouseListener(oyuncuZarMouse);
@@ -378,6 +381,7 @@ public class Game extends javax.swing.JFrame {
         });
     }
 
+    //Oyun hesaplamaları
     void Calculate() {
 
         for (int j = 0; j < 17; j++) {
