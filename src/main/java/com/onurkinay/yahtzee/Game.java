@@ -8,6 +8,7 @@ package com.onurkinay.yahtzee;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -52,8 +54,14 @@ public class Game extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         oyuncu = new javax.swing.JPanel();
+        rakip = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                formMouseWheelMoved(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -77,7 +85,7 @@ public class Game extends javax.swing.JFrame {
                 {"YAHTZEE", null, null}
             },
             new String [] {
-                "", "Player #1", "Player #2"
+                "", "You", "Enemy"
             }
         ) {
             Class[] types = new Class [] {
@@ -158,15 +166,20 @@ public class Game extends javax.swing.JFrame {
         orta.add(jLabel6);
         jLabel6.setBounds(380, 30, 50, 50);
 
-        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 600, 120));
+        getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 600, 120));
 
         jLabel7.setText("jLabel7");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 380, -1, -1));
 
-        oyuncu.setBackground(new java.awt.Color(0, 204, 204));
+        oyuncu.setBackground(new java.awt.Color(204, 0, 183));
         oyuncu.setName("orta"); // NOI18N
         oyuncu.setLayout(null);
-        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 600, 120));
+        getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 600, 120));
+
+        rakip.setBackground(new java.awt.Color(51, 255, 0));
+        rakip.setName("orta"); // NOI18N
+        rakip.setLayout(null);
+        getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -194,30 +207,29 @@ public class Game extends javax.swing.JFrame {
             tur = 0;
             zarAt.setEnabled(true);
             for (Component zar : oyuncu.getComponents()) {
-               
-                    zar.setLocation(zar.getLocation().x, 30);
-                    zar.removeMouseListener(ortaZarMouse);
-                    zar.removeMouseListener(oyuncuZarMouse);
 
-                   // zar.addMouseListener(oyuncuZarMouse);
+                zar.setLocation(zar.getLocation().x, 30);
+                zar.removeMouseListener(ortaZarMouse);
+                zar.removeMouseListener(oyuncuZarMouse);
 
-                    
-                    oyuncu.remove(zar);
-                    orta.add(zar);
+                // zar.addMouseListener(oyuncuZarMouse);
+                oyuncu.remove(zar);
+                orta.add(zar);
 
-                    refresh();
-                
+                refresh();
+
             }
             jLabel7.setText("Yeni raund");
 
         } else {
             //herhangi bir seçim yapılmadı
-             jLabel1.setText("Herhangi bir seçim yapılmadı");
+            jLabel1.setText("Herhangi bir seçim yapılmadı");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     int tur = 0;
-    private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
-
+    
+    void zarlariAt(int player){
+        
         if (tur < 3) {
             tur++;
             /*   for (Component gelenler : oyuncu.getComponents()) {
@@ -258,9 +270,9 @@ public class Game extends javax.swing.JFrame {
                     }
                     i++;
                     if (i >= 10) {
-                    
+
                         timer.cancel();
-                        Calculate();
+                        Calculate(player);
                         if (tur >= 3) {
                             jLabel7.setText("Tur sayısı bitti");
                             zarAt.setEnabled(false);
@@ -273,7 +285,6 @@ public class Game extends javax.swing.JFrame {
 
                                 img.addMouseListener(ortaZarMouse);
 
-                                
                                 orta.remove(img);
                                 oyuncu.add(img);
 
@@ -294,8 +305,64 @@ public class Game extends javax.swing.JFrame {
                 }
             }, delay, period);
         }
+    }
+    private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
+
+        zarlariAt(1);
 
     }//GEN-LAST:event_zarAtActionPerformed
+
+    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
+
+        String s = (String) JOptionPane.showInputDialog(
+                this,
+                "Complete the sentence:\n"
+                + "\"Green eggs and...\"",
+                "Customized Dialog",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+//If a string was returned, say so.
+        if ((s != null)) {
+            // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
+            JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+
+            int zarSirasi = Integer.parseInt(s.substring(0, 1));
+            JLabel zar = images[zarSirasi];
+
+            int komut = Integer.parseInt(s.substring(2, 3));
+
+            if (komut == 1) {
+                zar.setLocation(zar.getLocation().x, 31);
+
+                zar.removeMouseListener(oyuncuZarMouse);
+                zar.removeMouseListener(ortaZarMouse);
+
+                orta.remove(evt.getComponent());
+                rakip.add(zar);
+
+                refresh();
+            } else if(komut == 2){
+
+                zar.setLocation(zar.getLocation().x, 30);
+
+                zar.removeMouseListener(ortaZarMouse);
+                zar.removeMouseListener(oyuncuZarMouse);
+
+                zar.addMouseListener(oyuncuZarMouse);
+
+                rakip.remove(evt.getComponent());
+                orta.add(zar);
+
+                refresh();
+            }else if(komut == 3){
+                zarlariAt(2);
+            }
+
+            return;
+        }
+ 
+    }//GEN-LAST:event_formMouseWheelMoved
 
     // <editor-fold defaultstate="collapsed" desc="Zar alma ve verme">    
     MouseAdapter ortaZarMouse = new MouseAdapter() {
@@ -313,7 +380,7 @@ public class Game extends javax.swing.JFrame {
     };
 
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
-        Component zar =  evt.getComponent();
+        Component zar = evt.getComponent();
 
         zar.setLocation(zar.getLocation().x, 31);
 
@@ -322,7 +389,6 @@ public class Game extends javax.swing.JFrame {
 
         zar.addMouseListener(ortaZarMouse);
 
-        
         orta.remove(evt.getComponent());
         oyuncu.add(zar);
 
@@ -330,7 +396,7 @@ public class Game extends javax.swing.JFrame {
     }
 
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
-       Component zar =  evt.getComponent();
+        Component zar = evt.getComponent();
         zar.setLocation(zar.getLocation().x, 30);
 
         zar.removeMouseListener(ortaZarMouse);
@@ -338,7 +404,6 @@ public class Game extends javax.swing.JFrame {
 
         zar.addMouseListener(oyuncuZarMouse);
 
-        
         oyuncu.remove(evt.getComponent());
         orta.add(zar);
 
@@ -373,6 +438,7 @@ public class Game extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -382,12 +448,12 @@ public class Game extends javax.swing.JFrame {
     }
 
     //Oyun hesaplamaları
-    void Calculate() {
+    void Calculate(int player) {
 
         for (int j = 0; j < 17; j++) {
-            if (jTable1.getValueAt(j, 1) != null && "*".equals(jTable1.getValueAt(j, 1).toString().substring(0, 1))) {
+            if (jTable1.getValueAt(j, player) != null && "*".equals(jTable1.getValueAt(j, player).toString().substring(0, 1))) {
             } else {
-                jTable1.setValueAt(null, j, 1);
+                jTable1.setValueAt(null, j, player);
             }
         }
 
@@ -398,10 +464,10 @@ public class Game extends javax.swing.JFrame {
             //UPPER SECTION
             for (int j = 0; j < 6; j++) {
                 if (Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) == (j + 1)) {
-                    if (jTable1.getValueAt(j, 1) != null && "*".equals(jTable1.getValueAt(j, 1).toString().substring(0, 1))) {
+                    if (jTable1.getValueAt(j, player) != null && "*".equals(jTable1.getValueAt(j, player).toString().substring(0, 1))) {
                     } else {
-                        int value = (jTable1.getValueAt(j, 1) == null) ? 0 : Integer.parseInt(jTable1.getValueAt(j, 1).toString());
-                        jTable1.setValueAt(value + j + 1, j, 1);
+                        int value = (jTable1.getValueAt(j, player) == null) ? 0 : Integer.parseInt(jTable1.getValueAt(j, player).toString());
+                        jTable1.setValueAt(value + j + 1, j, player);
                     }
                 }
             }
@@ -412,9 +478,9 @@ public class Game extends javax.swing.JFrame {
         for (JLabel img : images) {
             value += Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
         }
-        if (jTable1.getValueAt(15, 1) != null && "*".equals(jTable1.getValueAt(15, 1).toString().substring(0, 1))) {
+        if (jTable1.getValueAt(15, player) != null && "*".equals(jTable1.getValueAt(15, player).toString().substring(0, 1))) {
         } else {
-            jTable1.setValueAt(value, 15, 1);
+            jTable1.setValueAt(value, 15, player);
         }
         /*   //YATZHEE
         int same = 0;
@@ -448,6 +514,7 @@ public class Game extends javax.swing.JFrame {
     void refresh() {
         orta.repaint();
         oyuncu.repaint();
+        rakip.repaint();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -462,6 +529,7 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel orta;
     private javax.swing.JPanel oyuncu;
+    private javax.swing.JPanel rakip;
     private javax.swing.JButton zarAt;
     // End of variables declaration//GEN-END:variables
 
