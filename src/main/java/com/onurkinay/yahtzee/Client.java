@@ -25,7 +25,7 @@ public class Client {
     public String serverIP;
     public int serverPort;
 
-    public void Connect(String serverIp, int serverPort) {
+    public String Connect(String serverIp, int serverPort) {
         try {
             this.serverIP = serverIp;
             this.serverPort = serverPort;
@@ -35,17 +35,18 @@ public class Client {
             this.cOutput = new ObjectOutputStream(this.socket.getOutputStream());
             this.cInput = new ObjectInputStream(this.socket.getInputStream());
 
-            this.cOutput.writeObject("merhaba");
+            this.cOutput.writeObject("match_newGame");
 
             Object msg = cInput.readObject();
-            System.out.println(msg.toString());
+            return msg.toString();
 
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        return "-1";
     }
 
 }

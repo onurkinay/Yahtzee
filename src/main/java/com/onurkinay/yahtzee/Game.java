@@ -28,6 +28,8 @@ public class Game extends javax.swing.JFrame {
     /**
      * Creates new form Game
      */
+    int you = -1;
+    int enemy = -2;
     public Game() {
         initComponents();
     }
@@ -55,6 +57,7 @@ public class Game extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         oyuncu = new javax.swing.JPanel();
         rakip = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -181,6 +184,9 @@ public class Game extends javax.swing.JFrame {
         rakip.setLayout(null);
         getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
 
+        jLabel8.setText("jLabel8");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 450, -1, -1));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -227,9 +233,9 @@ public class Game extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
     int tur = 0;
-    
-    void zarlariAt(int player){
-        
+
+    void zarlariAt(int player) {
+
         if (tur < 3) {
             tur++;
             /*   for (Component gelenler : oyuncu.getComponents()) {
@@ -342,7 +348,7 @@ public class Game extends javax.swing.JFrame {
                 rakip.add(zar);
 
                 refresh();
-            } else if(komut == 2){
+            } else if (komut == 2) {
 
                 zar.setLocation(zar.getLocation().x, 30);
 
@@ -355,13 +361,13 @@ public class Game extends javax.swing.JFrame {
                 orta.add(zar);
 
                 refresh();
-            }else if(komut == 3){
+            } else if (komut == 3) {
                 zarlariAt(2);
             }
 
             return;
         }
- 
+
     }//GEN-LAST:event_formMouseWheelMoved
 
     // <editor-fold defaultstate="collapsed" desc="Zar alma ve verme">    
@@ -442,7 +448,14 @@ public class Game extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Game().setVisible(true);
+
+                Game ekran = new Game();
+                
+                Client myClient = new Client();
+                String id = myClient.Connect("127.0.0.1", 5000);
+                
+                ekran.jLabel8.setText(id);
+                ekran.setVisible(true);
             }
         });
     }
@@ -525,6 +538,7 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel orta;

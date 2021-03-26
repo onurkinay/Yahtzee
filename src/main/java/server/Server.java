@@ -5,13 +5,16 @@
  */
 package server;
 
+import java.awt.List;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.SSLServerSocket;
 
 /**
  *
@@ -20,38 +23,67 @@ import java.util.logging.Logger;
 public class Server {
 
     public ServerSocket socket;
+    public ListenThread listenThread;
     public int port;
+    public ArrayList<SClient> clients;
 
     public Server(int port) {
         try {
+
             this.port = port;
-            this.socket = new ServerSocket(port);
+            this.socket = new ServerSocket(port);// statik ip var
+            this.clients = new ArrayList<SClient>();
+
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-
         }
     }
 
     public void Listen() {
-        while (!this.socket.isClosed()) {
+        this.listenThread = new ListenThread(this);
+        this.listenThread.start();
+    }
+
+    public void SendBroadcastMessage(Object msg) {
+        for (SClient client : clients) {
             try {
-                System.out.println("listening...");
-                Socket nClient = this.socket.accept();
-                System.out.println("client connected");
-
-                ObjectOutputStream cOutput = new ObjectOutputStream(nClient.getOutputStream());
-                ObjectInputStream cInput = new ObjectInputStream(nClient.getInputStream());
-
-                Object msg = cInput.readObject();
-                System.out.println(msg.toString());
-
-                cOutput.writeObject("welcome");
-
+                client.cOutput.writeObject(msg);
             } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+
+}
+
+class ListenThread extends Thread {
+
+    private Server server;
+
+    public ListenThread(Server server) {
+        
+        this.server = server;
+
+    }
+
+    @Override
+    public void run() {
+        while (!this.server.socket.isClosed()) {
+            try {
+
+                System.out.println("listening");
+                Socket nSocket = this.server.socket.accept();//blocking method | soket döndürür ip + port
+
+                SClient nClient = new SClient(nSocket);
+                nClient.Listen();
+                this.server.clients.add(nClient);
+
+            } catch (IOException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }
+
 }
