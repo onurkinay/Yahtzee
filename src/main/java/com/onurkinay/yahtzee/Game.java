@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,8 +29,11 @@ public class Game extends javax.swing.JFrame {
     /**
      * Creates new form Game
      */
-    int you = -1;
-    int enemy = -2;
+    public DefaultListModel clientMessagesModel;
+    cClient myClient = null;
+
+    public int enemy = -2;
+
     public Game() {
         initComponents();
     }
@@ -46,7 +50,7 @@ public class Game extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        acceptBtn = new javax.swing.JButton();
         zarAt = new javax.swing.JButton();
         orta = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -58,6 +62,8 @@ public class Game extends javax.swing.JFrame {
         oyuncu = new javax.swing.JPanel();
         rakip = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -112,17 +118,19 @@ public class Game extends javax.swing.JFrame {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("jLabel1");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 380, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, -1, -1));
 
-        jButton1.setText("Accept");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        acceptBtn.setText("Accept");
+        acceptBtn.setEnabled(false);
+        acceptBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                acceptBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 410, 289, -1));
+        getContentPane().add(acceptBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 410, 289, -1));
 
         zarAt.setText("Roll Dice");
+        zarAt.setEnabled(false);
         zarAt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 zarAtActionPerformed(evt);
@@ -185,7 +193,18 @@ public class Game extends javax.swing.JFrame {
         getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
 
         jLabel8.setText("jLabel8");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 450, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 450, -1, -1));
+
+        jButton2.setText("Connect and Find a match");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 480, 290, -1));
+
+        jLabel9.setText("jLabel9");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -207,7 +226,7 @@ public class Game extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
         if (secilen != -1) {
             jTable1.setValueAt("*" + jTable1.getValueAt(secilen, 1).toString(), secilen, 1);
             tur = 0;
@@ -231,10 +250,10 @@ public class Game extends javax.swing.JFrame {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_acceptBtnActionPerformed
     int tur = 0;
 
-    void zarlariAt(int player) {
+    public void zarlariAt(int player) {
 
         if (tur < 3) {
             tur++;
@@ -278,6 +297,7 @@ public class Game extends javax.swing.JFrame {
                     if (i >= 10) {
 
                         timer.cancel();
+                        mesajlas("GelenZarlar["+gelenZarlar()+"]");
                         Calculate(player);
                         if (tur >= 3) {
                             jLabel7.setText("Tur sayısı bitti");
@@ -314,6 +334,7 @@ public class Game extends javax.swing.JFrame {
     }
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
 
+        mesajlas("e#zarAt");
         zarlariAt(1);
 
     }//GEN-LAST:event_zarAtActionPerformed
@@ -370,6 +391,31 @@ public class Game extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formMouseWheelMoved
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+
+        if (myClient == null) {
+            myClient = new cClient("127.0.0.1", 5000);
+            myClient.Start();
+
+            mesajlas("match_me");
+            jLabel8.setText("Connected and waiting a enemy");
+            jButton2.setEnabled(false);
+        } else if (!myClient.isConnected) {
+            myClient.Start();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    void mesajlas(String mesaj) {
+        if (myClient != null && myClient.isConnected) {
+            if(mesaj.equals("match_me")){
+                 myClient.SendMessage(mesaj);
+            }else{
+            myClient.SendMessage("{"+enemy+"}" +"#"+mesaj);
+            //"{"+enemy+"}#"+msg
+            }
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="Zar alma ve verme">    
     MouseAdapter ortaZarMouse = new MouseAdapter() {
         @Override
@@ -448,16 +494,38 @@ public class Game extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-
-                Game ekran = new Game();
-                
-                Client myClient = new Client();
-                String id = myClient.Connect("127.0.0.1", 5000);
-                
-                ekran.jLabel8.setText(id);
-                ekran.setVisible(true);
+               
+               
             }
         });
+    }
+    
+    public String gelenZarlar(){
+         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+         String res = "";
+         for (JLabel img : images) {
+             res+=img.getAccessibleContext().getAccessibleDescription() +",";
+         }
+         return res.substring(0, res.length() - 1);
+    }
+    
+    public void  zarlariDuzenle(String zarlar){
+        String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
+        String[] zarDuzeni = zarlar.split("\\,",-1); 
+         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+         for (int i = 1; i<=5;i++) {
+                        images[i-1].setText("");
+
+                        images[i-1].addMouseListener(oyuncuZarMouse);
+
+                        int k = Integer.parseInt(zarDuzeni[i-1]);
+                        ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
+                        Image image = icon.getImage();
+                        Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+                        images[i-1].setIcon(new ImageIcon(newimg));
+                        images[i-1].getAccessibleContext().setAccessibleDescription("" + k);
+
+                    }
     }
 
     //Oyun hesaplamaları
@@ -529,8 +597,23 @@ public class Game extends javax.swing.JFrame {
         oyuncu.repaint();
         rakip.repaint();
     }
+
+    public void start(boolean first) {
+        if (first) {
+            zarAt.setEnabled(true);
+            jLabel9.setText("Your turn!");
+        } else {
+            zarAt.setEnabled(false);
+            jLabel9.setText("Waiting for enemy's move");
+        }
+
+        acceptBtn.setEnabled(false);
+        jLabel8.setText("Started a Match. Your enemy is " + enemy);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private static javax.swing.JButton acceptBtn;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -538,13 +621,14 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    public static javax.swing.JLabel jLabel8;
+    private static javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel orta;
     private javax.swing.JPanel oyuncu;
     private javax.swing.JPanel rakip;
-    private javax.swing.JButton zarAt;
+    private static javax.swing.JButton zarAt;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -5,15 +5,18 @@
  */
 package server;
 
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 /**
  *
- * @author onur
+ * @author k-sam
  */
 public class FrmServer extends javax.swing.JFrame {
-    Server myserver;
+    static Server myserver;
+    public static ArrayList<Match> maclar = new ArrayList<>();
     public static DefaultListModel clientMessagesModel;
+    public static DefaultListModel clientsConnectedModel;
 
     /**
      * Creates new form FrmServer
@@ -23,6 +26,9 @@ public class FrmServer extends javax.swing.JFrame {
         this.myserver = new Server(5000);
         clientMessagesModel= new DefaultListModel();
         lst_clientMessages.setModel(clientMessagesModel);
+        clientsConnectedModel= new DefaultListModel();
+        lst_clientsConnected.setModel(clientsConnectedModel);
+      
                 
     }
 
@@ -41,7 +47,10 @@ public class FrmServer extends javax.swing.JFrame {
         lst_clientMessages = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         txta_message = new javax.swing.JTextArea();
-        btn_sendBroadcast = new javax.swing.JButton();
+        btn_sendSelectedClientMessage = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        lst_clientsConnected = new javax.swing.JList<>();
+        btn_sendBroadcast1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -59,21 +68,33 @@ public class FrmServer extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(lst_clientMessages);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, 170, 200));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 290, 360));
 
         txta_message.setColumns(20);
         txta_message.setRows(5);
         jScrollPane2.setViewportView(txta_message);
 
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 120));
 
-        btn_sendBroadcast.setText("Broadcast Message");
-        btn_sendBroadcast.addActionListener(new java.awt.event.ActionListener() {
+        btn_sendSelectedClientMessage.setText("Sent Message Selected");
+        btn_sendSelectedClientMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_sendBroadcastActionPerformed(evt);
+                btn_sendSelectedClientMessageActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_sendBroadcast, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 180, -1));
+        getContentPane().add(btn_sendSelectedClientMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 140, 30));
+
+        jScrollPane3.setViewportView(lst_clientsConnected);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 180, 120));
+
+        btn_sendBroadcast1.setText("Broadcast Message");
+        btn_sendBroadcast1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_sendBroadcast1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btn_sendBroadcast1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 140, 30));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -83,10 +104,15 @@ public class FrmServer extends javax.swing.JFrame {
         this.myserver.Listen();
     }//GEN-LAST:event_btn_startActionPerformed
 
-    private void btn_sendBroadcastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendBroadcastActionPerformed
+    private void btn_sendSelectedClientMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendSelectedClientMessageActionPerformed
+        // TODO add your handling code here:
+        this.myserver.SendSelectedClientMessage(txta_message.getText(),Integer.parseInt(lst_clientsConnected.getSelectedValue()));
+    }//GEN-LAST:event_btn_sendSelectedClientMessageActionPerformed
+
+    private void btn_sendBroadcast1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendBroadcast1ActionPerformed
         // TODO add your handling code here:
         this.myserver.SendBroadcastMessage(txta_message.getText());
-    }//GEN-LAST:event_btn_sendBroadcastActionPerformed
+    }//GEN-LAST:event_btn_sendBroadcast1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -124,11 +150,14 @@ public class FrmServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_sendBroadcast;
+    private javax.swing.JButton btn_sendBroadcast1;
+    private javax.swing.JButton btn_sendSelectedClientMessage;
     private javax.swing.JButton btn_start;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> lst_clientMessages;
+    private javax.swing.JList<String> lst_clientsConnected;
     private javax.swing.JTextField txt_port;
     private javax.swing.JTextArea txta_message;
     // End of variables declaration//GEN-END:variables

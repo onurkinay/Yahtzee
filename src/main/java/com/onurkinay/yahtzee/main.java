@@ -10,10 +10,8 @@ package com.onurkinay.yahtzee;
  * @author onur
  */
 public class main {
-
+    public static Game panel = new Game();
     public static void main(String[] args) {
-        System.out.println("Let's start!!!!");
-        Client myClient = new Client();
-        myClient.Connect("127.0.0.1", 5000);
+       panel.setVisible(true);
     }
 }
