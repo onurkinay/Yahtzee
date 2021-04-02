@@ -98,14 +98,24 @@ class ClientListenThread extends Thread {
                    }
                 }
                 else if(msg.toString().contains("e#ZarAt")){
-                     System.out.println("düşman zar hareketi yaptı");
+                     System.out.println("düşman zar atti");
                      main.panel.zarlariAt(2);
                  }else if(msg.toString().contains("DusmanZarlar")){
-                     System.out.println("düşman zarları geldi");
+                     System.out.println("düşman zarlari geldi");
                      String s = msg.toString();
                      String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                      main.panel.zarlariDuzenle(zarlar);
                      
+                 }else if(msg.toString().contains("ZarAl")){
+                     System.out.println("düşman zar alma hareketi yapti");
+                     String s = msg.toString();
+                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                     main.panel.zarIsleri(zar+"-"+"1");
+                 }else if(msg.toString().contains("ZarVer")){
+                     System.out.println("düşman zar verme haretketi yapti");
+                     String s = msg.toString();
+                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                     main.panel.zarIsleri(zar+"-"+"2");
                  }
                 
                

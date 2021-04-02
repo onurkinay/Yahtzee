@@ -66,11 +66,6 @@ public class Game extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                formMouseWheelMoved(evt);
-            }
-        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -148,6 +143,7 @@ public class Game extends javax.swing.JFrame {
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel2);
         jLabel2.setBounds(140, 30, 50, 50);
+        jLabel2.getAccessibleContext().setAccessibleName("zar1");
 
         jLabel3.setText("ss");
         jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -155,6 +151,7 @@ public class Game extends javax.swing.JFrame {
         jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel3);
         jLabel3.setBounds(200, 30, 50, 50);
+        jLabel3.getAccessibleContext().setAccessibleName("zar2");
 
         jLabel4.setText("ss");
         jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -162,6 +159,7 @@ public class Game extends javax.swing.JFrame {
         jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel4);
         jLabel4.setBounds(260, 30, 50, 50);
+        jLabel4.getAccessibleContext().setAccessibleName("zar3");
 
         jLabel5.setText("ss");
         jLabel5.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -169,6 +167,7 @@ public class Game extends javax.swing.JFrame {
         jLabel5.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel5);
         jLabel5.setBounds(320, 30, 50, 50);
+        jLabel5.getAccessibleContext().setAccessibleName("zar4");
 
         jLabel6.setText("ss");
         jLabel6.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -176,6 +175,7 @@ public class Game extends javax.swing.JFrame {
         jLabel6.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel6);
         jLabel6.setBounds(380, 30, 50, 50);
+        jLabel6.getAccessibleContext().setAccessibleName("zar5");
 
         getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 600, 120));
 
@@ -339,22 +339,12 @@ public class Game extends javax.swing.JFrame {
 
     }//GEN-LAST:event_zarAtActionPerformed
 
-    private void formMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_formMouseWheelMoved
-
-        String s = (String) JOptionPane.showInputDialog(
-                this,
-                "Complete the sentence:\n"
-                + "\"Green eggs and...\"",
-                "Customized Dialog",
-                JOptionPane.PLAIN_MESSAGE
-        );
-
-//If a string was returned, say so.
-        if ((s != null)) {
+    void zarIsleri(String s){
+         if ((s != null)) {
             // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
             JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
-            int zarSirasi = Integer.parseInt(s.substring(0, 1));
+            int zarSirasi = Integer.parseInt(s.substring(0, 1))-1;
             JLabel zar = images[zarSirasi];
 
             int komut = Integer.parseInt(s.substring(2, 3));
@@ -365,7 +355,7 @@ public class Game extends javax.swing.JFrame {
                 zar.removeMouseListener(oyuncuZarMouse);
                 zar.removeMouseListener(ortaZarMouse);
 
-                orta.remove(evt.getComponent());
+                orta.remove(zar);
                 rakip.add(zar);
 
                 refresh();
@@ -378,7 +368,7 @@ public class Game extends javax.swing.JFrame {
 
                 zar.addMouseListener(oyuncuZarMouse);
 
-                rakip.remove(evt.getComponent());
+                rakip.remove(zar);
                 orta.add(zar);
 
                 refresh();
@@ -388,9 +378,8 @@ public class Game extends javax.swing.JFrame {
 
             return;
         }
-
-    }//GEN-LAST:event_formMouseWheelMoved
-
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
 
@@ -443,6 +432,7 @@ public class Game extends javax.swing.JFrame {
 
         orta.remove(evt.getComponent());
         oyuncu.add(zar);
+        mesajlas("ZarAl["+zar.getAccessibleContext().getAccessibleName().substring(3)+"]");
 
         refresh();
     }
@@ -459,6 +449,7 @@ public class Game extends javax.swing.JFrame {
         oyuncu.remove(evt.getComponent());
         orta.add(zar);
 
+        mesajlas("ZarVer["+zar.getAccessibleContext().getAccessibleName().substring(3)+"]");
         refresh();
     }
 
@@ -514,6 +505,8 @@ public class Game extends javax.swing.JFrame {
         String[] zarDuzeni = zarlar.split("\\,",-1); 
          JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
          for (int i = 1; i<=5;i++) {
+             
+                    
                         images[i-1].setText("");
 
                         images[i-1].addMouseListener(oyuncuZarMouse);

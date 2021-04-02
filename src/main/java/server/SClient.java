@@ -115,12 +115,27 @@ class ClientListenThread extends Thread {
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     FrmServer.myserver.SendSelectedClientMessage("e#ZarAt", pEnemy);
                 }else if(msg.toString().contains("GelenZarlar")){
-                     System.out.println("oyunculardan biri hareketini yaptı");
+                    System.out.println("oyunculardan biri hareketini yaptı");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     
                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     FrmServer.myserver.SendSelectedClientMessage("DusmanZarlar["+zarlar+"]", pEnemy);
+                }else if(msg.toString().contains("ZarAl")){
+                     System.out.println("oyunculardan biri zar aldı");
+                    String s = msg.toString();
+                    int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
+                    
+                    String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    FrmServer.myserver.SendSelectedClientMessage("ZarAl["+zar+"]", pEnemy);
+                }
+                else if(msg.toString().contains("ZarVer")){
+                     System.out.println("oyunculardan biri zar verdi");
+                    String s = msg.toString();
+                    int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
+                    
+                    String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    FrmServer.myserver.SendSelectedClientMessage("ZarVer["+zar+"]", pEnemy);
                 }
 
             } catch (IOException ex) {
