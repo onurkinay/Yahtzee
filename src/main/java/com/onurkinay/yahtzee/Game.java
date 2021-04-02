@@ -33,6 +33,7 @@ public class Game extends javax.swing.JFrame {
     cClient myClient = null;
 
     public int enemy = -2;
+    public boolean turn = false;
 
     public Game() {
         initComponents();
@@ -245,7 +246,18 @@ public class Game extends javax.swing.JFrame {
 
             }
             jLabel7.setText("Yeni raund");
+           
+            zarAt.setEnabled(false);
+            acceptBtn.setEnabled(false);
+            JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
+            for (JLabel img : images) {
+
+                img.removeMouseListener(oyuncuZarMouse);
+                img.removeMouseListener(ortaZarMouse);
+
+            }
+ mesajlas("yourTurn");
         } else {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
@@ -283,7 +295,9 @@ public class Game extends javax.swing.JFrame {
                     for (JLabel img : zarlar) {
                         img.setText("");
 
-                        img.addMouseListener(oyuncuZarMouse);
+                        if (turn) {
+                            img.addMouseListener(oyuncuZarMouse);
+                        }
 
                         int k = 1 + (int) (Math.random() * ((5) + 1));
                         ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
@@ -297,35 +311,56 @@ public class Game extends javax.swing.JFrame {
                     if (i >= 10) {
 
                         timer.cancel();
-                        mesajlas("GelenZarlar["+gelenZarlar()+"]");
+                        mesajlas("GelenZarlar[" + gelenZarlar() + "]");
                         Calculate(player);
                         if (tur >= 3) {
-                            jLabel7.setText("Tur sayısı bitti");
+                            jLabel7.setText("Tur sayısı bitti"); 
                             zarAt.setEnabled(false);
+                            if (turn) {
 
-                            for (Component img : zarlar) {
+                                acceptBtn.setEnabled(true);
+                                for (Component img : zarlar) {
 
-                                img.setLocation(img.getLocation().x, 30);
-                                img.removeMouseListener(oyuncuZarMouse);
-                                img.removeMouseListener(ortaZarMouse);
+                                    img.setLocation(img.getLocation().x, 30);
+                                    img.removeMouseListener(oyuncuZarMouse);
+                                    img.removeMouseListener(ortaZarMouse);
 
-                                img.addMouseListener(ortaZarMouse);
+                                    img.addMouseListener(ortaZarMouse);
 
-                                orta.remove(img);
-                                oyuncu.add(img);
+                                    orta.remove(img);
+                                    oyuncu.add(img);
 
-                                refresh();
-                            }
+                                    refresh();
+                                }
 
-                            for (Component gelenler : oyuncu.getComponents()) {
-                                if (gelenler instanceof JLabel) {
-                                    gelenler.removeMouseListener(ortaZarMouse);
-                                    gelenler.removeMouseListener(oyuncuZarMouse);
+                                for (Component gelenler : oyuncu.getComponents()) {
+                                    if (gelenler instanceof JLabel) {
+                                        gelenler.removeMouseListener(ortaZarMouse);
+                                        gelenler.removeMouseListener(oyuncuZarMouse);
+                                    }
+                                }
+                            } else {
+
+                                acceptBtn.setEnabled(false);
+                                for (Component img : zarlar) {
+
+                                    img.setLocation(img.getLocation().x, 30);
+                                    img.removeMouseListener(oyuncuZarMouse);
+                                    img.removeMouseListener(ortaZarMouse);
+
+                                    orta.remove(img);
+                                    rakip.add(img);
+
+                                    refresh();
+                                }
+
+                                for (Component gelenler : rakip.getComponents()) {
+                                    if (gelenler instanceof JLabel) {
+                                        gelenler.removeMouseListener(ortaZarMouse);
+                                        gelenler.removeMouseListener(oyuncuZarMouse);
+                                    }
                                 }
                             }
-
-                        } else {
-                            jLabel7.setText("Tur sayısı: " + tur);
                         }
                     }
                 }
@@ -339,12 +374,12 @@ public class Game extends javax.swing.JFrame {
 
     }//GEN-LAST:event_zarAtActionPerformed
 
-    void zarIsleri(String s){
-         if ((s != null)) {
+    void zarIsleri(String s) {
+        if ((s != null)) {
             // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
             JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
-            int zarSirasi = Integer.parseInt(s.substring(0, 1))-1;
+            int zarSirasi = Integer.parseInt(s.substring(0, 1)) - 1;
             JLabel zar = images[zarSirasi];
 
             int komut = Integer.parseInt(s.substring(2, 3));
@@ -366,7 +401,9 @@ public class Game extends javax.swing.JFrame {
                 zar.removeMouseListener(ortaZarMouse);
                 zar.removeMouseListener(oyuncuZarMouse);
 
-                zar.addMouseListener(oyuncuZarMouse);
+                if (turn) {
+                    zar.addMouseListener(oyuncuZarMouse);
+                }
 
                 rakip.remove(zar);
                 orta.add(zar);
@@ -379,7 +416,7 @@ public class Game extends javax.swing.JFrame {
             return;
         }
     }
-    
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
 
@@ -397,11 +434,11 @@ public class Game extends javax.swing.JFrame {
 
     void mesajlas(String mesaj) {
         if (myClient != null && myClient.isConnected) {
-            if(mesaj.equals("match_me")){
-                 myClient.SendMessage(mesaj);
-            }else{
-            myClient.SendMessage("{"+enemy+"}" +"#"+mesaj);
-            //"{"+enemy+"}#"+msg
+            if (mesaj.equals("match_me")) {
+                myClient.SendMessage(mesaj);
+            } else {
+                myClient.SendMessage("{" + enemy + "}" + "#" + mesaj);
+                //"{"+enemy+"}#"+msg
             }
         }
     }
@@ -432,7 +469,7 @@ public class Game extends javax.swing.JFrame {
 
         orta.remove(evt.getComponent());
         oyuncu.add(zar);
-        mesajlas("ZarAl["+zar.getAccessibleContext().getAccessibleName().substring(3)+"]");
+        mesajlas("ZarAl[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
 
         refresh();
     }
@@ -449,7 +486,7 @@ public class Game extends javax.swing.JFrame {
         oyuncu.remove(evt.getComponent());
         orta.add(zar);
 
-        mesajlas("ZarVer["+zar.getAccessibleContext().getAccessibleName().substring(3)+"]");
+        mesajlas("ZarVer[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
         refresh();
     }
 
@@ -485,40 +522,40 @@ public class Game extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               
-               
+
             }
         });
     }
-    
-    public String gelenZarlar(){
-         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
-         String res = "";
-         for (JLabel img : images) {
-             res+=img.getAccessibleContext().getAccessibleDescription() +",";
-         }
-         return res.substring(0, res.length() - 1);
+
+    public String gelenZarlar() {
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        String res = "";
+        for (JLabel img : images) {
+            res += img.getAccessibleContext().getAccessibleDescription() + ",";
+        }
+        return res.substring(0, res.length() - 1);
     }
-    
-    public void  zarlariDuzenle(String zarlar){
+
+    public void zarlariDuzenle(String zarlar) {
         String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
-        String[] zarDuzeni = zarlar.split("\\,",-1); 
-         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
-         for (int i = 1; i<=5;i++) {
-             
-                    
-                        images[i-1].setText("");
+        String[] zarDuzeni = zarlar.split("\\,", -1);
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        for (int i = 1; i <= 5; i++) {
 
-                        images[i-1].addMouseListener(oyuncuZarMouse);
+            images[i - 1].setText("");
 
-                        int k = Integer.parseInt(zarDuzeni[i-1]);
-                        ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
-                        Image image = icon.getImage();
-                        Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
-                        images[i-1].setIcon(new ImageIcon(newimg));
-                        images[i-1].getAccessibleContext().setAccessibleDescription("" + k);
+            if (turn) {
+                images[i - 1].addMouseListener(oyuncuZarMouse);
+            }
 
-                    }
+            int k = Integer.parseInt(zarDuzeni[i - 1]);
+            ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
+            Image image = icon.getImage();
+            Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+            images[i - 1].setIcon(new ImageIcon(newimg));
+            images[i - 1].getAccessibleContext().setAccessibleDescription("" + k);
+
+        }
     }
 
     //Oyun hesaplamaları
@@ -595,9 +632,19 @@ public class Game extends javax.swing.JFrame {
         if (first) {
             zarAt.setEnabled(true);
             jLabel9.setText("Your turn!");
+            turn = true;
         } else {
             zarAt.setEnabled(false);
             jLabel9.setText("Waiting for enemy's move");
+            turn = false;
+            JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+
+            for (JLabel img : images) {
+
+                img.removeMouseListener(oyuncuZarMouse);
+                img.removeMouseListener(ortaZarMouse);
+
+            }
         }
 
         acceptBtn.setEnabled(false);
@@ -621,7 +668,7 @@ public class Game extends javax.swing.JFrame {
     private javax.swing.JPanel orta;
     private javax.swing.JPanel oyuncu;
     private javax.swing.JPanel rakip;
-    private static javax.swing.JButton zarAt;
+    public static javax.swing.JButton zarAt;
     // End of variables declaration//GEN-END:variables
 
 }

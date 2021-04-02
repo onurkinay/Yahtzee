@@ -137,6 +137,13 @@ class ClientListenThread extends Thread {
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     FrmServer.myserver.SendSelectedClientMessage("ZarVer["+zar+"]", pEnemy);
                 }
+                 else if(msg.toString().contains("yourTurn")){
+                     System.out.println("sıra baskasinda");
+                    String s = msg.toString();
+                    int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
+                     
+                    FrmServer.myserver.SendSelectedClientMessage("myturn", pEnemy);
+                }
 
             } catch (IOException ex) {
                 this.client.server.RemoveClient(client);

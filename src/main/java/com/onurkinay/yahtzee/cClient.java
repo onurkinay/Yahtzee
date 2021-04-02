@@ -116,6 +116,21 @@ class ClientListenThread extends Thread {
                      String s = msg.toString();
                      String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                      main.panel.zarIsleri(zar+"-"+"2");
+                 }else if(msg.toString().contains("myturn")){
+                     
+                     System.out.println("sıra bende");
+                     String s = msg.toString();
+                     
+                     main.panel.zarIsleri("1-2");
+                     main.panel.zarIsleri("2-2");
+                     main.panel.zarIsleri("3-2");
+                     main.panel.zarIsleri("4-2");
+                     main.panel.zarIsleri("5-2");
+                     main.panel.zarAt.setEnabled(true);
+                     main.panel.turn=true;
+                     main.panel.tur=0;
+                     
+                     
                  }
                 
                
