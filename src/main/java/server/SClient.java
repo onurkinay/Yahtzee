@@ -16,8 +16,9 @@ import java.util.logging.Logger;
  *
  * @author k-sam
  */
+//<editor-fold defaultstate="collapsed" desc="SClient Sınıfı">
 public class SClient {
-
+    
     public static int idCount;
     public Server server;
     public int id;
@@ -26,8 +27,8 @@ public class SClient {
     public ObjectInputStream cInput;
     public ClientListenThread listenThread;
     public boolean isConnected;
-
-
+    
+    
     public SClient(Socket socket, Server server) {
         try {
             this.server = server;
@@ -36,14 +37,14 @@ public class SClient {
             this.socket = socket;
             this.cOutput = new ObjectOutputStream(this.socket.getOutputStream());
             this.cInput = new ObjectInputStream(this.socket.getInputStream());
-
+            
             this.listenThread = new ClientListenThread(this);
             System.out.println("client connected");
             this.isConnected=false;
         } catch (IOException ex) {
             Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
     public void Close()
     {
@@ -58,7 +59,7 @@ public class SClient {
         
         
     }
-
+    
     public void SendMessage(Object msg) {
         if (this.socket.isConnected()) {
             try {
@@ -68,15 +69,16 @@ public class SClient {
             }
         }
     }
-
+    
     public void Listen() {
         
         this.isConnected=true;
         this.listenThread.start();
         System.out.println("client listening");
     }
-
+    
 }
+//</editor-fold>
 
 class ClientListenThread extends Thread {
 
@@ -94,7 +96,8 @@ class ClientListenThread extends Thread {
                 System.out.println("waiting message from client");
                 Object msg = this.client.cInput.readObject(); // blocking method | waiting message
                 System.out.println(msg.toString()); 
-                if(msg.equals("match_me")){
+                //<editor-fold defaultstate="collapsed" desc="hareketler">
+                if(msg.toString().contains("match_me")){
                     for(Match mac: FrmServer.maclar){
                         if(mac.player2 == -1){
                             mac.player2 = this.client.id;
@@ -110,40 +113,51 @@ class ClientListenThread extends Thread {
                     FrmServer.maclar.add(yeniMac);
                     
                 }else if(msg.toString().contains("e#zarAt")){
+                    
                     System.out.println("oyunculardan biri hareketini yaptı");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     FrmServer.myserver.SendSelectedClientMessage("e#ZarAt", pEnemy);
+                    
                 }else if(msg.toString().contains("GelenZarlar")){
+                    
                     System.out.println("oyunculardan biri hareketini yaptı");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     
                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     FrmServer.myserver.SendSelectedClientMessage("DusmanZarlar["+zarlar+"]", pEnemy);
+                    
                 }else if(msg.toString().contains("ZarAl")){
-                     System.out.println("oyunculardan biri zar aldı");
+                    
+                    System.out.println("oyunculardan biri zar aldı");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     FrmServer.myserver.SendSelectedClientMessage("ZarAl["+zar+"]", pEnemy);
+                    
                 }
                 else if(msg.toString().contains("ZarVer")){
-                     System.out.println("oyunculardan biri zar verdi");
+                    
+                    System.out.println("oyunculardan biri zar verdi");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     FrmServer.myserver.SendSelectedClientMessage("ZarVer["+zar+"]", pEnemy);
+                    
                 }
-                 else if(msg.toString().contains("yourTurn")){
-                     System.out.println("sıra baskasinda");
+                else if(msg.toString().contains("yourTurn")){
+                    System.out.println("sıra baskasinda");
                     String s = msg.toString();
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
-                     
+                    
                     FrmServer.myserver.SendSelectedClientMessage("myturn", pEnemy);
                 }
+//</editor-fold>
+                
+            
 
             } catch (IOException ex) {
                 this.client.server.RemoveClient(client);

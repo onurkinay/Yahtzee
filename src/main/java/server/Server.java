@@ -3,18 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+///NO CHANGE REALLY FOR NOW
 package server;
 
-import java.awt.List;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+ 
+import java.io.IOException; 
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.net.ssl.SSLServerSocket;
+import java.util.logging.Logger; 
 
 /**
  *
