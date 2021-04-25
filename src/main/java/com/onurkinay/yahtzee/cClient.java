@@ -101,7 +101,8 @@ class ClientListenThread extends Thread {
                 else if(msg.toString().contains("e#ZarAt")){
                     
                      System.out.println("düşman zar atti");
-                     main.panel.zarlariAt(2);
+                     
+                     main.panel.sahteZar();
                      
                  }else if(msg.toString().contains("DusmanZarlar")){
                      
