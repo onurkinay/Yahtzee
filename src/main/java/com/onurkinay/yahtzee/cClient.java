@@ -85,7 +85,7 @@ class ClientListenThread extends Thread {
     @Override
     public void run() {
         while (this.client.isConnected) {
-            try {
+            try {//Serverdan gelen mesajlar
 
                 Object msg = this.client.cInput.readObject(); // blocking method | waiting message
                 System.out.println(msg.toString());
@@ -127,16 +127,23 @@ class ClientListenThread extends Thread {
                  }else if(msg.toString().contains("myturn")){
                      
                      System.out.println("sıra bende");
-                     String s = msg.toString();
+                     String s = msg.toString(); 
+                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
+                     main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                     System.out.println("secilen puan geldi");
                      
                      main.panel.zarIsleri("1-2");
                      main.panel.zarIsleri("2-2");
                      main.panel.zarIsleri("3-2");
                      main.panel.zarIsleri("4-2");
                      main.panel.zarIsleri("5-2");
+                     
                      main.panel.zarAt.setEnabled(true);
                      main.panel.turn=true;
                      main.panel.tur=0;
+                     
+                     main.panel.jLabel9.setText("Your turn!");
+                     main.panel.jLabel7.setText("Yeni raund");
                      
                      
                  }

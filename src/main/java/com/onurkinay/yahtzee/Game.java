@@ -17,6 +17,11 @@ import javax.swing.JLabel;
 
 /**
  *
+ * ***tablodan accept edildiğinde karşı taraf bildirilmiyor
+ * 2. turda zarlar dönmüyor
+ * zar turu bitmeden tüm zarlar seçildiğinde accept gelmiyor
+ * 3. turda her iki tarafta gg oluyor
+ * 2. turda enemy tablosu boşta kalıyor
  * @author onur
  */
 public class Game extends javax.swing.JFrame {
@@ -219,8 +224,7 @@ public class Game extends javax.swing.JFrame {
     private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
         if (secilen != -1) {
             gameCard.setValueAt("*" + gameCard.getValueAt(secilen, 1).toString(), secilen, 1);
-            tur = 0;
-            zarAt.setEnabled(true);
+           
             for (Component zar : oyuncu.getComponents()) {
 
                 zar.setLocation(zar.getLocation().x, 30);
@@ -234,10 +238,7 @@ public class Game extends javax.swing.JFrame {
                 refresh();
 
             }
-            jLabel7.setText("Yeni raund");
-
-            zarAt.setEnabled(false);
-            acceptBtn.setEnabled(false);
+            
             JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
             for (JLabel img : images) {
@@ -246,7 +247,16 @@ public class Game extends javax.swing.JFrame {
                 img.removeMouseListener(ortaZarMouse);
 
             }
-            mesajlas("yourTurn");
+            
+            tur = 0;
+            jLabel7.setText("Yeni raund");
+            zarAt.setEnabled(false);
+            acceptBtn.setEnabled(false);
+            jLabel9.setText("Waiting for enemy's move");
+            turn = false;
+            mesajlas("yourTurn["+secilen+"]");
+            secilen = -1;
+            
         } else {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
@@ -278,7 +288,7 @@ public class Game extends javax.swing.JFrame {
     public void zarlariAt(int player) {
         
         if (tur < 3) {
-            tur++;
+           // tur++;
             /*   for (Component gelenler : oyuncu.getComponents()) {
             if (gelenler instanceof JLabel) {
             gelenler.removeMouseListener(ortaZarMouse);
@@ -427,6 +437,7 @@ public class Game extends javax.swing.JFrame {
                 myClient.SendMessage(mesaj);
             } else {
                 myClient.SendMessage("{" + enemy + "}" + "#" + mesaj);
+                System.out.println(enemy+" rakibe mesaj gönderildi - "+mesaj);
                 //"{"+enemy+"}#"+msg
             }
         }
@@ -515,6 +526,7 @@ public class Game extends javax.swing.JFrame {
             images[i - 1].getAccessibleContext().setAccessibleDescription("" + k);
 
         }
+        Calculate(2);
     }
 //</editor-fold>
 
@@ -553,33 +565,92 @@ public class Game extends javax.swing.JFrame {
         } else {
             gameCard.setValueAt(value, 15, player);
         }
-        /*   //YATZHEE
+
+        
         int same = 0;
+        int zarNo = 0;
         for (JLabel img : images) {
-        if (same == 0) {
-        Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
-        continue;
-        }
-        if (same == Integer.parseInt(img.getAccessibleContext().getAccessibleDescription())) {
-        continue;
-        } else {
-        same = -1;
-        break;
-        }
+            if (same == 0 && zarNo == 0) {
+                zarNo = Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
+                continue;
+            }
+            if (zarNo == Integer.parseInt(img.getAccessibleContext().getAccessibleDescription())) {
+                continue;
+            } else {
+                same = -1;
+                break;
+            }
         }
         if (same != -1) {
-        jTable1.setValueAt(50, 16, 1);
+            gameCard.setValueAt(50, 16, player);
         }
         
-        //büyük düz i guess
+        
+        //büyük düz 
         boolean[] res = new boolean[6];
         for (JLabel img : images) {
         res[Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) - 1] = true;
         }
         if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true && res[4] == true)
         || (res[1] == true && res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
-        jTable1.setValueAt(50, 14, 1);
-        }*/
+        gameCard.setValueAt(40, 14, 1);
+        }
+        //küçük düz
+        res = new boolean[6];
+        for (JLabel img : images) {
+        res[Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) - 1] = true;
+        }
+        if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true)
+        || (res[1] == true && res[2] == true && res[3] == true && res[4] == true)
+        || (res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
+        gameCard.setValueAt(30, 13, 1);
+        }
+        
+        //3 ve 4 tur
+        for (int i = 0; i<5;i++) { 
+             int k = Integer.parseInt(images[i].getAccessibleContext().getAccessibleDescription());
+             int score = k;
+             int ayniZarlar = 1;
+             for (int j = 0; j<5;j++) {
+                 if(j == i) continue;
+                 score += Integer.parseInt(images[j].getAccessibleContext().getAccessibleDescription());
+                 if(Integer.parseInt(images[j].getAccessibleContext().getAccessibleDescription())  == k){
+                     ayniZarlar++;
+                }
+             }
+             if(ayniZarlar >= 3) gameCard.setValueAt(score, 10, player);
+             if(ayniZarlar >= 4) gameCard.setValueAt(score, 11, player);
+        }
+        
+        //full house
+          for (int i = 0; i<5;i++) { 
+             int k = Integer.parseInt(images[i].getAccessibleContext().getAccessibleDescription());
+             int score = k;
+             int ayniZarlar = 1;
+             for (int j = 0; j<5;j++) {
+                 if(j == i) continue;
+                 score += Integer.parseInt(images[j].getAccessibleContext().getAccessibleDescription());
+                 if(Integer.parseInt(images[j].getAccessibleContext().getAccessibleDescription())  == k){
+                     ayniZarlar++;
+                }
+             }
+             if(ayniZarlar == 3) {
+                  int ikinciZar = -1;
+                  int ikinciTur = 1;
+                    for (int p = 0; p<5;p++) { 
+                      if(Integer.parseInt(images[p].getAccessibleContext().getAccessibleDescription()) == k) continue;
+                      if(ikinciZar == -1) ikinciZar = Integer.parseInt(images[p].getAccessibleContext().getAccessibleDescription());
+                      else if(Integer.parseInt(images[p].getAccessibleContext().getAccessibleDescription()) == ikinciZar) ikinciTur++;
+                  }
+                    if(ikinciTur == 2) gameCard.setValueAt(25, 12, player);
+                 
+             }
+          
+        }
+        
+        
+      
+        
     }
 //</editor-fold>
 
@@ -655,16 +726,16 @@ public class Game extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JButton acceptBtn;
     private javax.swing.JButton connectServer;
-    private javax.swing.JTable gameCard;
+    public static javax.swing.JTable gameCard;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    public static javax.swing.JLabel jLabel7;
     public static javax.swing.JLabel jLabel8;
-    private static javax.swing.JLabel jLabel9;
+    public static javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel orta;
     private javax.swing.JPanel oyuncu;

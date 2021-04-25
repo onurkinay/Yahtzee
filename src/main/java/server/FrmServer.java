@@ -13,7 +13,7 @@ import javax.swing.DefaultListModel;
  * @author k-sam
  */
 public class FrmServer extends javax.swing.JFrame {
-    static Server myserver;
+    public static Server myserver;
     public static ArrayList<Match> maclar = new ArrayList<>();
     public static DefaultListModel clientMessagesModel;
     public static DefaultListModel clientsConnectedModel;

@@ -151,9 +151,10 @@ class ClientListenThread extends Thread {
                 else if(msg.toString().contains("yourTurn")){
                     System.out.println("sıra baskasinda");
                     String s = msg.toString();
+                    String secilen = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     int pEnemy = Integer.parseInt( s.substring(s.indexOf("{") + 1, s.indexOf("}")) );
                     
-                    FrmServer.myserver.SendSelectedClientMessage("myturn", pEnemy);
+                    FrmServer.myserver.SendSelectedClientMessage("myturn["+secilen+"]", pEnemy);
                 }
 //</editor-fold>
                 
