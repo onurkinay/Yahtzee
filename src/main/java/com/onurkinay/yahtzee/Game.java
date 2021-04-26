@@ -17,9 +17,10 @@ import javax.swing.JLabel;
 
 /**
  *
- * kod temizlemesi
+ *  
  *
- * yahtzee bonus üst toplam 63'ü geçerse +35 puan gameCard görünüş sıfır puan
+ * yahtzee bonus üst toplam 63'ü geçerse +35 puan 
+ * gameCard görünüş sıfır puan
  * durumu yahtzee sıfır seçildiğinde bonus yok
  *
  * @author onur
@@ -527,6 +528,7 @@ public class Game extends javax.swing.JFrame {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="gelen zarları döner">
     public String gelenZarlar() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -566,11 +568,8 @@ public class Game extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="tablo hesaplama">
     void Calculate(int player) {
 
-        for (int j = 0; j < 17; j++) {
-            if (gameCard.getValueAt(j, player) != null && "*".equals(gameCard.getValueAt(j, player).toString().substring(0, 1))) {
-            } else {
-                gameCard.setValueAt(null, j, player);
-            }
+        for (int j = 0; j < 17; j++) { 
+            tabloyaVeriGir(player, j, null);
         }
 
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -594,11 +593,9 @@ public class Game extends javax.swing.JFrame {
         for (JLabel img : images) {
             value += Integer.parseInt(img.getAccessibleContext().getAccessibleDescription());
         }
-        if (gameCard.getValueAt(15, player) != null && "*".equals(gameCard.getValueAt(15, player).toString().substring(0, 1))) {
-        } else {
-            gameCard.setValueAt(value, 15, player);
-        }
-//yahtzee
+
+        tabloyaVeriGir(player, 15, value);
+        //yahtzee
         int same = 0;
         int zarNo = 0;
         for (JLabel img : images) {
@@ -613,12 +610,9 @@ public class Game extends javax.swing.JFrame {
                 break;
             }
         }
-        if (gameCard.getValueAt(16, player) != null && "*".equals(gameCard.getValueAt(16, player).toString().substring(0, 1))) {
 
-        } else {
-            if (same != -1) {
-                gameCard.setValueAt(50, 16, player);
-            }
+        if (same != -1) {
+            tabloyaVeriGir(player, 16, 50);
         }
 
         //büyük düz 
@@ -628,11 +622,8 @@ public class Game extends javax.swing.JFrame {
         }
         if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true && res[4] == true)
                 || (res[1] == true && res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
-            if (gameCard.getValueAt(14, player) != null && "*".equals(gameCard.getValueAt(14, player).toString().substring(0, 1))) {
 
-            } else {
-                gameCard.setValueAt(40, 14, player);
-            }
+            tabloyaVeriGir(player, 14, 40);
         }
         //küçük düz
         res = new boolean[6];
@@ -642,11 +633,8 @@ public class Game extends javax.swing.JFrame {
         if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true)
                 || (res[1] == true && res[2] == true && res[3] == true && res[4] == true)
                 || (res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
-            if (gameCard.getValueAt(13, player) != null && "*".equals(gameCard.getValueAt(13, player).toString().substring(0, 1))) {
 
-            } else {
-                gameCard.setValueAt(30, 13, player);
-            }
+            tabloyaVeriGir(player, 13, 30);
         }
 
         //3 ve 4 tur
@@ -664,18 +652,10 @@ public class Game extends javax.swing.JFrame {
                 }
             }
             if (ayniZarlar >= 3) {
-                if (gameCard.getValueAt(10, player) != null && "*".equals(gameCard.getValueAt(10, player).toString().substring(0, 1))) {
-
-                } else {
-                    gameCard.setValueAt(score, 10, player);
-                }
+                tabloyaVeriGir(player, 10, score);
             }
             if (ayniZarlar >= 4) {
-                if (gameCard.getValueAt(11, player) != null && "*".equals(gameCard.getValueAt(11, player).toString().substring(0, 1))) {
-
-                } else {
-                    gameCard.setValueAt(score, 11, player);
-                }
+                tabloyaVeriGir(player, 11, score);
             }
         }
 
@@ -707,11 +687,7 @@ public class Game extends javax.swing.JFrame {
                     }
                 }
                 if (ikinciTur == 2) {
-                    if (gameCard.getValueAt(12, player) != null && "*".equals(gameCard.getValueAt(12, player).toString().substring(0, 1))) {
-
-                    } else {
-                        gameCard.setValueAt(25, 12, player);
-                    }
+                    tabloyaVeriGir(player, 12, "25");
                 }
 
             }
@@ -754,7 +730,8 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    public boolean tabloyaVeriGir(int player, int satir, String veri) {
+    //<editor-fold defaultstate="collapsed" desc="gameCard'a veri girme">
+    public boolean tabloyaVeriGir(int player, int satir, Object veri) {
         if (gameCard.getValueAt(satir, player) != null && "*".equals(gameCard.getValueAt(satir, player).toString().substring(0, 1))) {
             return false;
         } else {
@@ -762,10 +739,12 @@ public class Game extends javax.swing.JFrame {
             return true;
         }
     }
+//</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="seçilmemiş puan satırları silme">
     public void tabloTemizle() {
         for (int i = 1; i <= 2; i++) {
-
+            
             for (int j = 0; j < 17; j++) {
                 if (gameCard.getValueAt(j, i) != null && "*".equals(gameCard.getValueAt(j, i).toString().substring(0, 1))) {
                 } else {
@@ -774,6 +753,7 @@ public class Game extends javax.swing.JFrame {
             }
         }
     }
+//</editor-fold>
 
     /**
      * @param args the command line arguments
