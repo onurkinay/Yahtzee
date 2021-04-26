@@ -131,7 +131,7 @@ class ClientListenThread extends Thread {
                     System.out.println("sıra bende");
                     String s = msg.toString();
                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
-                    main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                    if(secilen != 17) main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
                     System.out.println("secilen puan geldi");
                     
                     main.panel.zarIsleri("1-2");
@@ -145,6 +145,7 @@ class ClientListenThread extends Thread {
                     main.panel.tur=0;
                     
                     main.panel.tabloTemizle();
+                    main.panel.calculateScore(2); 
                     
                     main.panel.jLabel9.setText("Your turn!");
                     main.panel.jLabel7.setText("Yeni raund");

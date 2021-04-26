@@ -17,11 +17,7 @@ import javax.swing.JLabel;
 
 /**
  *
- *  
- *
- * yahtzee bonus üst toplam 63'ü geçerse +35 puan 
- * gameCard görünüş sıfır puan
- * durumu yahtzee sıfır seçildiğinde bonus yok
+ * 
  *
  * @author onur
  */
@@ -74,7 +70,7 @@ public class Game extends javax.swing.JFrame {
                 {"Fives", null, null},
                 {"Sixes", null, null},
                 {null, null, null},
-                {"Sum", null, null},
+                {"Upper Sum", null, null},
                 {"Bonus", null, null},
                 {null, null, null},
                 {"Three of a kind", null, null},
@@ -83,7 +79,12 @@ public class Game extends javax.swing.JFrame {
                 {"Small straight", null, null},
                 {"Large straight", null, null},
                 {"Chance", null, null},
-                {"YAHTZEE", null, null}
+                {"YAHTZEE", null, null},
+                {"YAHTZEE Bonus", null, null},
+                {null, null, null},
+                {"Lower Sum", null, null},
+                {null, null, null},
+                {"TOTAL", null, null}
             },
             new String [] {
                 "", "You", "Enemy"
@@ -106,11 +107,11 @@ public class Game extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(gameCard);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 70, 289, 311));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, 289, 380));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("jLabel1");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 390, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 420, -1, -1));
 
         acceptBtn.setText("Accept");
         acceptBtn.setEnabled(false);
@@ -119,7 +120,7 @@ public class Game extends javax.swing.JFrame {
                 acceptBtnActionPerformed(evt);
             }
         });
-        getContentPane().add(acceptBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 410, 289, -1));
+        getContentPane().add(acceptBtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 440, 289, -1));
 
         zarAt.setText("Roll Dice");
         zarAt.setEnabled(false);
@@ -177,7 +178,7 @@ public class Game extends javax.swing.JFrame {
         getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 600, 120));
 
         jLabel7.setText("jLabel7");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 380, -1, -1));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 380, -1, -1));
 
         oyuncu.setBackground(new java.awt.Color(204, 0, 183));
         oyuncu.setName("orta"); // NOI18N
@@ -190,7 +191,7 @@ public class Game extends javax.swing.JFrame {
         getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
 
         jLabel8.setText("jLabel8");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 450, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 480, -1, -1));
 
         connectServer.setText("Connect and Find a match");
         connectServer.addActionListener(new java.awt.event.ActionListener() {
@@ -198,10 +199,10 @@ public class Game extends javax.swing.JFrame {
                 connectServerActionPerformed(evt);
             }
         });
-        getContentPane().add(connectServer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 480, 290, -1));
+        getContentPane().add(connectServer, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 510, 290, -1));
 
         jLabel9.setText("jLabel9");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, -1, -1));
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -228,8 +229,13 @@ public class Game extends javax.swing.JFrame {
 
     private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
         if (secilen != -1) {
-            gameCard.setValueAt("*" + gameCard.getValueAt(secilen, 1).toString(), secilen, 1);
-
+            if (gameCard.getValueAt(secilen, 1) == null) {
+                gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
+            } else {
+                if (secilen != 17) {
+                    gameCard.setValueAt("*" + gameCard.getValueAt(secilen, 1).toString(), secilen, 1);
+                }
+            }
             for (Component zar : oyuncu.getComponents()) {
 
                 zar.setLocation(zar.getLocation().x, 30);
@@ -263,6 +269,7 @@ public class Game extends javax.swing.JFrame {
             secilen = -1;
 
             tabloTemizle();
+            calculateScore(1);
         } else {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
@@ -528,7 +535,6 @@ public class Game extends javax.swing.JFrame {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="gelen zarları döner">
     public String gelenZarlar() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -565,18 +571,21 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="tablo hesaplama">
+    //<editor-fold defaultstate="collapsed" desc="gameCard hesaplama">
     void Calculate(int player) {
 
-        for (int j = 0; j < 17; j++) { 
+        for (int j = 0; j < 20; j++) {
+            if (j == 7 || j == 8 || j == 17 || j == 19) {
+                continue;
+            }
             tabloyaVeriGir(player, j, null);
         }
 
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
+        //UPPER SECTION
         for (JLabel img : images) {
 
-            //UPPER SECTION
             for (int j = 0; j < 6; j++) {
                 if (Integer.parseInt(img.getAccessibleContext().getAccessibleDescription()) == (j + 1)) {
                     if (gameCard.getValueAt(j, player) != null && "*".equals(gameCard.getValueAt(j, player).toString().substring(0, 1))) {
@@ -612,7 +621,22 @@ public class Game extends javax.swing.JFrame {
         }
 
         if (same != -1) {
-            tabloyaVeriGir(player, 16, 50);
+            if (gameCard.getValueAt(16, player) != null && "*0".equals(gameCard.getValueAt(16, player).toString())) {
+
+            } else {
+                if (gameCard.getValueAt(16, player) != null && "*50".equals(gameCard.getValueAt(16, player).toString())) { //yahtzee ek bonus
+                    if (gameCard.getValueAt(17, player) != null) {
+                        int bonus = Integer.parseInt(gameCard.getValueAt(17, player).toString()) + 100;
+                        gameCard.setValueAt(bonus, 17, player);
+                    } else {
+                        tabloyaVeriGir(player, 17, 100);
+                    }
+                } else {
+                    tabloyaVeriGir(player, 16, 50);
+                }
+            }
+        } else {
+            tabloyaVeriGir(player, 16, 0);
         }
 
         //büyük düz 
@@ -697,6 +721,48 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
+    public void calculateScore(int player) {
+        //UPPER SCORE 
+        int upperScore = 0;
+        for (int i = 0; i < 6; i++) {
+            if (gameCard.getValueAt(i, player) != null && "*".equals(gameCard.getValueAt(i, player).toString().substring(0, 1))) {
+                String deger = gameCard.getValueAt(i, player).toString().substring(1);
+                upperScore += Integer.parseInt(deger);
+            }
+        }
+        tabloyaVeriGir(player, 7, upperScore);
+        if (upperScore >= 63) {
+            tabloyaVeriGir(player, 8, 35);
+        } else {
+            tabloyaVeriGir(player, 8, 0);
+        }
+
+        // LOWER SCORE 
+        int lowerScore = 0;
+        for (int i = 10; i < 18; i++) {
+            if (gameCard.getValueAt(i, player) != null) {
+                if ("*".equals(gameCard.getValueAt(i, player).toString().substring(0, 1))) {
+                    String deger = gameCard.getValueAt(i, player).toString().substring(1);
+                    lowerScore += Integer.parseInt(deger);
+                } else if (i == 17) {
+                    lowerScore += Integer.parseInt(gameCard.getValueAt(i, player).toString());
+                }
+            }
+        }
+        tabloyaVeriGir(player, 19, lowerScore);
+
+        int playerScore = 0;
+        playerScore += Integer.parseInt(gameCard.getValueAt(7, player).toString()); // upper score
+        playerScore += Integer.parseInt(gameCard.getValueAt(8, player).toString()); // bonus score by 63
+        playerScore += Integer.parseInt(gameCard.getValueAt(19, player).toString()); // lower score
+
+        tabloyaVeriGir(player, 21, playerScore);
+    }
+
+    public void finishMatch() {
+
+    }
+
     //<editor-fold defaultstate="collapsed" desc="oyunu başlat">
     public void start(boolean first) {
         if (first) {
@@ -744,8 +810,11 @@ public class Game extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="seçilmemiş puan satırları silme">
     public void tabloTemizle() {
         for (int i = 1; i <= 2; i++) {
-            
-            for (int j = 0; j < 17; j++) {
+
+            for (int j = 0; j < 20; j++) {
+                if (j == 7 || j == 8 || j == 17 || j == 19) {
+                    continue;
+                }
                 if (gameCard.getValueAt(j, i) != null && "*".equals(gameCard.getValueAt(j, i).toString().substring(0, 1))) {
                 } else {
                     gameCard.setValueAt(null, j, i);
