@@ -95,6 +95,7 @@ class ClientListenThread extends Thread {
                     
                     if(msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
                         main.panel.start(true);
+                        main.panel.oyunTur=-1;
                     }else if(msg.toString().contains("foundPlayerF")){
                         main.panel.start(false);
                     }
@@ -151,6 +152,8 @@ class ClientListenThread extends Thread {
                     main.panel.jLabel7.setText("Yeni raund");
                     
                     
+                }else if(msg.toString().contains("macBitir")){
+                    main.panel.finishMatch();
                 }
 //</editor-fold>
                 

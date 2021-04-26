@@ -157,6 +157,13 @@ class ClientListenThread extends Thread {
 
                         FrmServer.myserver.SendSelectedClientMessage("myturn[" + secilen + "]", pEnemy);
                     }
+                    else if (msg.toString().contains("macBitir")) {
+                        System.out.println("mac bitti");
+                        String s = msg.toString(); 
+                        int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
+
+                        FrmServer.myserver.SendSelectedClientMessage("macBitir", pEnemy);
+                    }
 //</editor-fold>
 
                 }

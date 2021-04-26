@@ -14,10 +14,16 @@ import java.util.TimerTask;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
- * 
+ * -maç ararken kapatılma bug 
+ * -jtable görünüşü gui iyileştirme 
+ * -yeni oyun başlatma
+ * -accept butonu olmadan, tablodan seçme 
+ * -maç sırasında oyunculardan biri çıkarsa
+ * -5 oyun turu kaldırılma
  *
  * @author onur
  */
@@ -31,10 +37,40 @@ public class Game extends javax.swing.JFrame {
     public int enemy = -2;
     public boolean turn = false;
     int tur = 0;
+    public int oyunTur = 0;
     int secilen = -1;
 
     public Game() {
         initComponents();
+        
+        String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
+        ArrayList<JLabel> zarlar = new ArrayList<>();
+        for (Component gelenler : orta.getComponents()) {
+            if (gelenler instanceof JLabel) {
+                zarlar.add((JLabel) gelenler);
+            }
+        }
+        for (JLabel img : zarlar) {
+            img.setText("");
+
+            if (turn) {
+                img.addMouseListener(oyuncuZarMouse);
+            }
+
+            int k = 1 + (int) (Math.random() * ((5) + 1));
+            ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
+            Image image = icon.getImage();
+            Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+            img.setIcon(new ImageIcon(newimg));
+            img.getAccessibleContext().setAccessibleDescription("" + k);
+
+        }
+        
+        jLabel7.setText("");
+        jLabel8.setText("");
+        jLabel1.setText("");
+        jLabel9.setText("");
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -228,6 +264,10 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_gameCardMouseClicked
 
     private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
+        if (oyunTur >= 5) {
+            finishMatch();
+            return;
+        }
         if (secilen != -1) {
             if (gameCard.getValueAt(secilen, 1) == null) {
                 gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
@@ -258,9 +298,12 @@ public class Game extends javax.swing.JFrame {
                 img.removeMouseListener(ortaZarMouse);
 
             }
-
+            if (oyunTur != -1) {
+                oyunTur++;
+            }
             tur = 0;
             jLabel7.setText("Yeni raund");
+            jLabel1.setText("Herhangi bir seçim yapılmadı");
             zarAt.setEnabled(false);
             acceptBtn.setEnabled(false);
             jLabel9.setText("Waiting for enemy's move");
@@ -284,8 +327,7 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_zarAtActionPerformed
 
     private void connectServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerActionPerformed
-        // TODO add your handling code here:
-
+        // TODO add your handling code here: 
         if (myClient == null) {
             myClient = new cClient("127.0.0.1", 5000);
             myClient.Start();
@@ -297,6 +339,7 @@ public class Game extends javax.swing.JFrame {
             myClient.Start();
         }
     }//GEN-LAST:event_connectServerActionPerformed
+
     //<editor-fold defaultstate="collapsed" desc="rastgele zar atar">
     public void zarlariAt(int player) {
 
@@ -535,6 +578,7 @@ public class Game extends javax.swing.JFrame {
     }
 
     //</editor-fold>
+    
     //<editor-fold defaultstate="collapsed" desc="gelen zarları döner">
     public String gelenZarlar() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -721,8 +765,9 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="tablo puanı hesaplama">
     public void calculateScore(int player) {
-        //UPPER SCORE 
+        //UPPER SCORE
         int upperScore = 0;
         for (int i = 0; i < 6; i++) {
             if (gameCard.getValueAt(i, player) != null && "*".equals(gameCard.getValueAt(i, player).toString().substring(0, 1))) {
@@ -737,7 +782,7 @@ public class Game extends javax.swing.JFrame {
             tabloyaVeriGir(player, 8, 0);
         }
 
-        // LOWER SCORE 
+        // LOWER SCORE
         int lowerScore = 0;
         for (int i = 10; i < 18; i++) {
             if (gameCard.getValueAt(i, player) != null) {
@@ -758,10 +803,27 @@ public class Game extends javax.swing.JFrame {
 
         tabloyaVeriGir(player, 21, playerScore);
     }
+//</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="maçı bitir">
     public void finishMatch() {
 
+        if (oyunTur != -1) {
+            mesajlas("macBitir");
+        }
+        int playerScore = Integer.parseInt(gameCard.getValueAt(21, 1).toString());
+        int rivalScore = Integer.parseInt(gameCard.getValueAt(21, 2).toString());
+
+        String mesaj = (playerScore < rivalScore) ? "rakip kazandı" : "sen kazandın";
+        jLabel9.setText("Match is over: " + mesaj);
+
+        zarAt.setEnabled(false);
+        acceptBtn.setEnabled(false);
+
+        JOptionPane.showMessageDialog(this,
+                mesaj);
     }
+//</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="oyunu başlat">
     public void start(boolean first) {
