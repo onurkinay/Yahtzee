@@ -89,65 +89,69 @@ class ClientListenThread extends Thread {
 
                 Object msg = this.client.cInput.readObject(); // blocking method | waiting message
                 System.out.println(msg.toString());
+                //<editor-fold defaultstate="collapsed" desc="hareketler">
                 if(msg.toString().contains("foundPlayer")){//maç eşleştirme sistemi
-                   main.panel.enemy = Integer.parseInt(msg.toString().substring(13));
-                  
-                   if(msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
-                       main.panel.start(true);
-                   }else if(msg.toString().contains("foundPlayerF")){
-                       main.panel.start(false);
-                   }
+                    main.panel.enemy = Integer.parseInt(msg.toString().substring(13));
+                    
+                    if(msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
+                        main.panel.start(true);
+                    }else if(msg.toString().contains("foundPlayerF")){
+                        main.panel.start(false);
+                    }
                 }
                 else if(msg.toString().contains("e#ZarAt")){
                     
-                     System.out.println("düşman zar atti");
-                     
-                     main.panel.sahteZar();
-                     
-                 }else if(msg.toString().contains("DusmanZarlar")){
-                     
-                     System.out.println("düşman zarlari geldi");
-                     String s = msg.toString();
-                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-                     main.panel.zarlariDuzenle(zarlar);
-                     
-                 }else if(msg.toString().contains("ZarAl")){
-                     
-                     System.out.println("düşman zar alma hareketi yapti");
-                     String s = msg.toString();
-                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-                     main.panel.zarIsleri(zar+"-"+"1");
-                     
-                 }else if(msg.toString().contains("ZarVer")){
-                     
-                     System.out.println("düşman zar verme haretketi yapti");
-                     String s = msg.toString();
-                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-                     main.panel.zarIsleri(zar+"-"+"2");
-                     
-                 }else if(msg.toString().contains("myturn")){
-                     
-                     System.out.println("sıra bende");
-                     String s = msg.toString(); 
-                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
-                     main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
-                     System.out.println("secilen puan geldi");
-                     
-                     main.panel.zarIsleri("1-2");
-                     main.panel.zarIsleri("2-2");
-                     main.panel.zarIsleri("3-2");
-                     main.panel.zarIsleri("4-2");
-                     main.panel.zarIsleri("5-2");
-                     
-                     main.panel.zarAt.setEnabled(true);
-                     main.panel.turn=true;
-                     main.panel.tur=0;
-                     
-                     main.panel.jLabel9.setText("Your turn!");
-                     main.panel.jLabel7.setText("Yeni raund");
-                     
-                     
-                 }
+                    System.out.println("düşman zar atti");
+                    
+                    main.panel.zarlariAt(2);
+                    
+                }else if(msg.toString().contains("DusmanZarlar")){
+                    
+                    System.out.println("düşman zarlari geldi");
+                    String s = msg.toString();
+                    String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    main.panel.zarlariDuzenle(zarlar);
+                    
+                }else if(msg.toString().contains("ZarAl")){
+                    
+                    System.out.println("düşman zar alma hareketi yapti");
+                    String s = msg.toString();
+                    String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    main.panel.zarIsleri(zar+"-"+"1");
+                    
+                }else if(msg.toString().contains("ZarVer")){
+                    
+                    System.out.println("düşman zar verme haretketi yapti");
+                    String s = msg.toString();
+                    String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    main.panel.zarIsleri(zar+"-"+"2");
+                    
+                }else if(msg.toString().contains("myturn")){
+                    
+                    System.out.println("sıra bende");
+                    String s = msg.toString();
+                    int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
+                    main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                    System.out.println("secilen puan geldi");
+                    
+                    main.panel.zarIsleri("1-2");
+                    main.panel.zarIsleri("2-2");
+                    main.panel.zarIsleri("3-2");
+                    main.panel.zarIsleri("4-2");
+                    main.panel.zarIsleri("5-2");
+                    
+                    main.panel.zarAt.setEnabled(true);
+                    main.panel.turn=true;
+                    main.panel.tur=0;
+                    
+                    main.panel.tabloTemizle();
+                    
+                    main.panel.jLabel9.setText("Your turn!");
+                    main.panel.jLabel7.setText("Yeni raund");
+                    
+                    
+                }
+//</editor-fold>
                 
                
             } catch (IOException ex) {

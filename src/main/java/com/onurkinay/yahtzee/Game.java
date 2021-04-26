@@ -18,6 +18,10 @@ import javax.swing.JLabel;
 /**
  *
  * kod temizlemesi
+ *
+ * yahtzee bonus üst toplam 63'ü geçerse +35 puan gameCard görünüş sıfır puan
+ * durumu yahtzee sıfır seçildiğinde bonus yok
+ *
  * @author onur
  */
 public class Game extends javax.swing.JFrame {
@@ -185,7 +189,7 @@ public class Game extends javax.swing.JFrame {
         getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
 
         jLabel8.setText("jLabel8");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 450, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 450, -1, -1));
 
         connectServer.setText("Connect and Find a match");
         connectServer.addActionListener(new java.awt.event.ActionListener() {
@@ -207,15 +211,18 @@ public class Game extends javax.swing.JFrame {
         int row = gameCard.rowAtPoint(evt.getPoint());
 
         int col = gameCard.columnAtPoint(evt.getPoint());
-        if (row == 6 || row == 7 || row == 8 || row == 9) {
-            jLabel1.setText("Hatalı Seçim");
-            secilen = -1;
+        if (col == 1) {
+            if (row == 6 || row == 7 || row == 8 || row == 9) {
+                jLabel1.setText("Hatalı Seçim");
+                secilen = -1;
+            } else {
+                // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
+                jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
+                secilen = row;
+            }
         } else {
-            // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
-            jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
-            secilen = row;
+            jLabel1.setText("Yanlış yere tıkladınız");
         }
-
     }//GEN-LAST:event_gameCardMouseClicked
 
     private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
@@ -254,6 +261,7 @@ public class Game extends javax.swing.JFrame {
             mesajlas("yourTurn[" + secilen + "]");
             secilen = -1;
 
+            tabloTemizle();
         } else {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
@@ -286,6 +294,7 @@ public class Game extends javax.swing.JFrame {
 
         if (tur < 3) {
             tur++;
+            jLabel7.setText("Tur sayısı: " + tur);
             /*   for (Component gelenler : oyuncu.getComponents()) {
             if (gelenler instanceof JLabel) {
             gelenler.removeMouseListener(ortaZarMouse);
@@ -328,36 +337,39 @@ public class Game extends javax.swing.JFrame {
                     if (i >= 10) {
 
                         timer.cancel();
-                        mesajlas("GelenZarlar[" + gelenZarlar() + "]");
-                        Calculate(player);
-                        if (tur >= 3) {
-                            jLabel7.setText("Tur sayısı bitti");
-                            zarAt.setEnabled(false);
-                            if (turn) {
+                        if (player == 1) {
+                            mesajlas("GelenZarlar[" + gelenZarlar() + "]");
+                            Calculate(player);
+                            if (tur >= 3) {
+                                jLabel7.setText("Tur sayısı bitti");
+                                zarAt.setEnabled(false);
+                                if (turn) {
 
-                                acceptBtn.setEnabled(true);
-                                for (Component img : zarlar) {
+                                    acceptBtn.setEnabled(true);
+                                    for (Component img : zarlar) {
 
-                                    img.setLocation(img.getLocation().x, 30);
-                                    img.removeMouseListener(oyuncuZarMouse);
-                                    img.removeMouseListener(ortaZarMouse);
+                                        img.setLocation(img.getLocation().x, 30);
+                                        img.removeMouseListener(oyuncuZarMouse);
+                                        img.removeMouseListener(ortaZarMouse);
 
-                                    img.addMouseListener(ortaZarMouse);
+                                        img.addMouseListener(ortaZarMouse);
 
-                                    orta.remove(img);
-                                    oyuncu.add(img);
+                                        orta.remove(img);
+                                        oyuncu.add(img);
 
-                                    refresh();
-                                }
+                                        refresh();
+                                    }
 
-                                for (Component gelenler : oyuncu.getComponents()) {
-                                    if (gelenler instanceof JLabel) {
-                                        gelenler.removeMouseListener(ortaZarMouse);
-                                        gelenler.removeMouseListener(oyuncuZarMouse);
+                                    for (Component gelenler : oyuncu.getComponents()) {
+                                        if (gelenler instanceof JLabel) {
+                                            gelenler.removeMouseListener(ortaZarMouse);
+                                            gelenler.removeMouseListener(oyuncuZarMouse);
+                                        }
                                     }
                                 }
-                            } else {
-
+                            }
+                        } else if (player == 2) {
+                            if (tur >= 3) {
                                 acceptBtn.setEnabled(false);
                                 for (Component img : zarlar) {
 
@@ -386,7 +398,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="aldığı parametreye göre zar hareketi yapar">
+    //<editor-fold defaultstate="collapsed" desc="aldığı parametreye göre zarları düzenler">
     void zarIsleri(String s) {
         if ((s != null)) {
             // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
@@ -470,20 +482,19 @@ public class Game extends javax.swing.JFrame {
         orta.remove(evt.getComponent());
         oyuncu.add(zar);
         mesajlas("ZarAl[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
-        
+
         int k = 0;
-         for (Component gelenler : oyuncu.getComponents()) {
-                if (gelenler instanceof JLabel) {
-                    k++;
-                }
+        for (Component gelenler : oyuncu.getComponents()) {
+            if (gelenler instanceof JLabel) {
+                k++;
             }
-         if(k == 5){
-             acceptBtn.setEnabled(true);
-         }else{
-             acceptBtn.setEnabled(false);
-         }
-                 
-        
+        }
+        if (k == 5) {
+            acceptBtn.setEnabled(true);
+        } else {
+            acceptBtn.setEnabled(false);
+        }
+
         refresh();
     }
 
@@ -498,18 +509,18 @@ public class Game extends javax.swing.JFrame {
 
         oyuncu.remove(evt.getComponent());
         orta.add(zar);
-        
-          int k = 0;
-         for (Component gelenler : oyuncu.getComponents()) {
-                if (gelenler instanceof JLabel) {
-                    k++;
-                }
+
+        int k = 0;
+        for (Component gelenler : oyuncu.getComponents()) {
+            if (gelenler instanceof JLabel) {
+                k++;
             }
-         if(k == 5){
-             acceptBtn.setEnabled(true);
-         }else{
-             acceptBtn.setEnabled(false);
-         }
+        }
+        if (k == 5) {
+            acceptBtn.setEnabled(true);
+        } else {
+            acceptBtn.setEnabled(false);
+        }
 
         mesajlas("ZarVer[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
         refresh();
@@ -603,9 +614,11 @@ public class Game extends javax.swing.JFrame {
             }
         }
         if (gameCard.getValueAt(16, player) != null && "*".equals(gameCard.getValueAt(16, player).toString().substring(0, 1))) {
-          
-        }else{
-            if(same != -1) gameCard.setValueAt(50, 16, player);
+
+        } else {
+            if (same != -1) {
+                gameCard.setValueAt(50, 16, player);
+            }
         }
 
         //büyük düz 
@@ -616,9 +629,9 @@ public class Game extends javax.swing.JFrame {
         if ((res[0] == true && res[1] == true && res[2] == true && res[3] == true && res[4] == true)
                 || (res[1] == true && res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
             if (gameCard.getValueAt(14, player) != null && "*".equals(gameCard.getValueAt(14, player).toString().substring(0, 1))) {
-               
-            }else{
-                 gameCard.setValueAt(40, 14, 1);
+
+            } else {
+                gameCard.setValueAt(40, 14, player);
             }
         }
         //küçük düz
@@ -630,8 +643,8 @@ public class Game extends javax.swing.JFrame {
                 || (res[1] == true && res[2] == true && res[3] == true && res[4] == true)
                 || (res[2] == true && res[3] == true && res[4] == true && res[5] == true)) {
             if (gameCard.getValueAt(13, player) != null && "*".equals(gameCard.getValueAt(13, player).toString().substring(0, 1))) {
-                
-            }else{
+
+            } else {
                 gameCard.setValueAt(30, 13, player);
             }
         }
@@ -651,31 +664,31 @@ public class Game extends javax.swing.JFrame {
                 }
             }
             if (ayniZarlar >= 3) {
-                 if(gameCard.getValueAt(10, player) != null && "*".equals(gameCard.getValueAt(10, player).toString().substring(0, 1))){
-              
-                 }else{
-                       gameCard.setValueAt(score, 10, player);
-                 }
+                if (gameCard.getValueAt(10, player) != null && "*".equals(gameCard.getValueAt(10, player).toString().substring(0, 1))) {
+
+                } else {
+                    gameCard.setValueAt(score, 10, player);
+                }
             }
             if (ayniZarlar >= 4) {
-                 if(gameCard.getValueAt(11, player) != null && "*".equals(gameCard.getValueAt(11, player).toString().substring(0, 1))){
-             
-                 }else{
-                        gameCard.setValueAt(score, 11, player);
-                 }
+                if (gameCard.getValueAt(11, player) != null && "*".equals(gameCard.getValueAt(11, player).toString().substring(0, 1))) {
+
+                } else {
+                    gameCard.setValueAt(score, 11, player);
+                }
             }
         }
 
         //full house
         for (int i = 0; i < 5; i++) {
             int k = Integer.parseInt(images[i].getAccessibleContext().getAccessibleDescription());
-           
+
             int ayniZarlar = 1;
             for (int j = 0; j < 5; j++) {
                 if (j == i) {
                     continue;
                 }
-              
+
                 if (Integer.parseInt(images[j].getAccessibleContext().getAccessibleDescription()) == k) {
                     ayniZarlar++;
                 }
@@ -694,11 +707,11 @@ public class Game extends javax.swing.JFrame {
                     }
                 }
                 if (ikinciTur == 2) {
-                     if(gameCard.getValueAt(12, player) != null && "*".equals(gameCard.getValueAt(12, player).toString().substring(0, 1))){
-                   
-                     }else{
-                          gameCard.setValueAt(25, 12, player);
-                     }
+                    if (gameCard.getValueAt(12, player) != null && "*".equals(gameCard.getValueAt(12, player).toString().substring(0, 1))) {
+
+                    } else {
+                        gameCard.setValueAt(25, 12, player);
+                    }
                 }
 
             }
@@ -741,48 +754,26 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="sahte zar döndürme kodu">
-    public void sahteZar() {
-        String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
-        ArrayList<JLabel> zarlar = new ArrayList<>();
-        for (Component gelenler : orta.getComponents()) {
-            if (gelenler instanceof JLabel) {
-                zarlar.add((JLabel) gelenler);
+    public boolean tabloyaVeriGir(int player, int satir, String veri) {
+        if (gameCard.getValueAt(satir, player) != null && "*".equals(gameCard.getValueAt(satir, player).toString().substring(0, 1))) {
+            return false;
+        } else {
+            gameCard.setValueAt(veri, satir, player);
+            return true;
+        }
+    }
+
+    public void tabloTemizle() {
+        for (int i = 1; i <= 2; i++) {
+
+            for (int j = 0; j < 17; j++) {
+                if (gameCard.getValueAt(j, i) != null && "*".equals(gameCard.getValueAt(j, i).toString().substring(0, 1))) {
+                } else {
+                    gameCard.setValueAt(null, j, i);
+                }
             }
         }
-        int delay = 0; // delay for 5 sec.
-        int period = 100; // repeat every sec.
-        Timer timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int i = 0;
-
-            public void run() {
-                for (JLabel img : zarlar) {
-                    img.setText("");
-
-                    if (turn) {
-                        img.addMouseListener(oyuncuZarMouse);
-                    }
-
-                    int k = 1 + (int) (Math.random() * ((5) + 1));
-                    ImageIcon icon = new ImageIcon("dice/" + dice[k] + ".jpg");
-                    Image image = icon.getImage();
-                    Image newimg = image.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
-                    img.setIcon(new ImageIcon(newimg));
-                    img.getAccessibleContext().setAccessibleDescription("" + k);
-
-                }
-                i++;
-                if (i >= 10) {
-
-                    timer.cancel();
-
-                }
-            }
-        }, delay, period);
     }
-//</editor-fold>
 
     /**
      * @param args the command line arguments
