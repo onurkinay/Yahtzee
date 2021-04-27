@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  */
 //<editor-fold defaultstate="collapsed" desc="cClient sınıfı">
 public class cClient {
-    
+
     public Socket socket;
     public ObjectInputStream cInput;
     public ObjectOutputStream cOutput;
@@ -26,7 +27,7 @@ public class cClient {
     public String serverIP;
     public int serverPort;
     public ClientListenThread listenThread;
-    
+
     public cClient(String serverIp, int serverPort) {
         try {
             this.isConnected = false;
@@ -35,12 +36,12 @@ public class cClient {
             this.socket = new Socket(this.serverIP, this.serverPort);
             this.cOutput = new ObjectOutputStream(this.socket.getOutputStream());
             this.cInput = new ObjectInputStream(this.socket.getInputStream());
-            
+
         } catch (IOException ex) {
             Logger.getLogger(cClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void SendMessage(Object msg) {
         if (this.socket.isConnected()) {
             try {
@@ -50,14 +51,14 @@ public class cClient {
             }
         }
     }
-    
+
     public void Start() {
-        
+
         this.listenThread = new ClientListenThread(this);
         this.isConnected = true;
         this.listenThread.start();
     }
-    
+
     public void Close() {
         try {
             this.isConnected = false;
@@ -67,9 +68,9 @@ public class cClient {
         } catch (IOException ex) {
             Logger.getLogger(cClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
 }
 //</editor-fold>
 
@@ -90,74 +91,80 @@ class ClientListenThread extends Thread {
                 Object msg = this.client.cInput.readObject(); // blocking method | waiting message
                 System.out.println(msg.toString());
                 //<editor-fold defaultstate="collapsed" desc="hareketler">
-                if(msg.toString().contains("foundPlayer")){//maç eşleştirme sistemi
+                if (msg.toString().contains("foundPlayer")) {//maç eşleştirme sistemi
                     main.panel.enemy = Integer.parseInt(msg.toString().substring(13));
-                    
-                    if(msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
+
+                    if (msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
                         main.panel.start(true);
-                        main.panel.oyunTur=-1;
-                    }else if(msg.toString().contains("foundPlayerF")){
+                        main.panel.oyunTur = -1;
+                    } else if (msg.toString().contains("foundPlayerF")) {
                         main.panel.start(false);
                     }
-                }
-                else if(msg.toString().contains("e#ZarAt")){
-                    
+                    main.panel.findAMatch.getAccessibleContext().setAccessibleDescription("terket");
+                    main.panel.connectServer.setEnabled(false);
+                } else if (msg.toString().contains("e#ZarAt")) {
+
                     System.out.println("düşman zar atti");
-                    
+
                     main.panel.zarlariAt(2);
-                    
-                }else if(msg.toString().contains("DusmanZarlar")){
-                    
+
+                } else if (msg.toString().contains("DusmanZarlar")) {
+
                     System.out.println("düşman zarlari geldi");
                     String s = msg.toString();
                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     main.panel.zarlariDuzenle(zarlar);
-                    
-                }else if(msg.toString().contains("ZarAl")){
-                    
+
+                } else if (msg.toString().contains("ZarAl")) {
+
                     System.out.println("düşman zar alma hareketi yapti");
                     String s = msg.toString();
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-                    main.panel.zarIsleri(zar+"-"+"1");
-                    
-                }else if(msg.toString().contains("ZarVer")){
-                    
+                    main.panel.zarIsleri(zar + "-" + "1");
+
+                } else if (msg.toString().contains("ZarVer")) {
+
                     System.out.println("düşman zar verme haretketi yapti");
                     String s = msg.toString();
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
-                    main.panel.zarIsleri(zar+"-"+"2");
-                    
-                }else if(msg.toString().contains("myturn")){
-                    
+                    main.panel.zarIsleri(zar + "-" + "2");
+
+                } else if (msg.toString().contains("myturn")) {
+
                     System.out.println("sıra bende");
                     String s = msg.toString();
                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
-                    if(secilen != 17) main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                    if (secilen != 17) {
+                        main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                    }
                     System.out.println("secilen puan geldi");
-                    
+
                     main.panel.zarIsleri("1-2");
                     main.panel.zarIsleri("2-2");
                     main.panel.zarIsleri("3-2");
                     main.panel.zarIsleri("4-2");
                     main.panel.zarIsleri("5-2");
-                    
+
                     main.panel.zarAt.setEnabled(true);
-                    main.panel.turn=true;
-                    main.panel.tur=0;
-                    
+                    main.panel.turn = true;
+                    main.panel.tur = 0;
+
                     main.panel.tabloTemizle();
-                    main.panel.calculateScore(2); 
-                    
+                    main.panel.calculateScore(2);
+
                     main.panel.jLabel9.setText("Your turn!");
                     main.panel.jLabel7.setText("Yeni raund");
-                    
-                    
-                }else if(msg.toString().contains("macBitir")){
+
+                } else if (msg.toString().contains("macBitir")) {
                     main.panel.finishMatch();
+                } else if (msg.toString().contains("quit_the_match")) {
+                    main.panel.quittedMatch();
+                    JOptionPane.showMessageDialog(main.panel,
+                            "Rakip maçı terketti");
+                    
                 }
 //</editor-fold>
-                
-               
+
             } catch (IOException ex) {
                 this.client.Close();
                 Logger.getLogger(ClientListenThread.class.getName()).log(Level.SEVERE, null, ex);
