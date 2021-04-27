@@ -761,15 +761,15 @@ public class Game extends javax.swing.JFrame {
             images[i - 1].getAccessibleContext().setAccessibleDescription("" + k);
 
         }
-        
+
         for (int i = 1; i <= 5; i++) {
-               if ( Integer.parseInt(zarDuzeni[i - 1]) !=  Integer.parseInt(images[i-1].getAccessibleContext().getAccessibleDescription()) )
-               {
-                   zarlariDuzenle(zarlar);
-                   System.out.println("Hatalı zar düzeni tespiti");
-               }
+            if (Integer.parseInt(zarDuzeni[i - 1]) != Integer.parseInt(images[i - 1].getAccessibleContext().getAccessibleDescription())) {
+                System.out.println("Hatali zar düzeni tespiti"); 
+                zarlariDuzenle(zarlar);
+
+            }
         }
-        
+
         Calculate(2);
     }
 //</editor-fold>
