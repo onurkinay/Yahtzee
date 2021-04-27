@@ -359,6 +359,7 @@ public class Game extends javax.swing.JFrame {
             sunucuVarmi = false;
 
             jLabel8.setText("Disconnected from server.");
+            return;
         }
 
         if (myClient == null) {
@@ -595,7 +596,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="aldığı parametreye göre zarları düzenler">
+    //<editor-fold defaultstate="collapsed" desc="aldığı parametreye göre rakibin zarlarını al ver yapar">
     void zarIsleri(String s) {
         if ((s != null)) {
             // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
@@ -727,7 +728,7 @@ public class Game extends javax.swing.JFrame {
         refresh();
     }
 
-    //</editor-fold>
+//</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="gelen zarları döner">
     public String gelenZarlar() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -760,6 +761,15 @@ public class Game extends javax.swing.JFrame {
             images[i - 1].getAccessibleContext().setAccessibleDescription("" + k);
 
         }
+        
+        for (int i = 1; i <= 5; i++) {
+               if ( Integer.parseInt(zarDuzeni[i - 1]) !=  Integer.parseInt(images[i-1].getAccessibleContext().getAccessibleDescription()) )
+               {
+                   zarlariDuzenle(zarlar);
+                   System.out.println("Hatalı zar düzeni tespiti");
+               }
+        }
+        
         Calculate(2);
     }
 //</editor-fold>
