@@ -364,7 +364,7 @@ public class Game extends javax.swing.JFrame {
 
         if (myClient == null) {
             sunucuVarmi = false;
-            Object[] servers = {"127.0.0.1", "3.142.40.78"};
+            Object[] servers = {"127.0.0.1", "yahtzee.onurkinay.com.tr"};
             String ip = (String) JOptionPane.showInputDialog(
                     this,
                     "Bağlantı kurulacak sunucu seçiniz...",
