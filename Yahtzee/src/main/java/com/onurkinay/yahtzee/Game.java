@@ -33,6 +33,7 @@ public class Game extends javax.swing.JFrame {
     int secilen = -1;
     boolean sonKarar = false;
     boolean sunucuVarmi = false;
+    boolean macDurumu = false;
 
     public Game() {
         initComponents();
@@ -271,7 +272,7 @@ public class Game extends javax.swing.JFrame {
                         // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
                         //jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi"); 
                         if (sonKarar) {
-                             secilen = row;
+                            secilen = row;
                             if (secilen != -1) {
                                 if (gameCard.getValueAt(secilen, 1) == null) {
                                     gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
@@ -339,6 +340,7 @@ public class Game extends javax.swing.JFrame {
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
 
         mesajlas("e#zarAt");
+        macDurumu = true;
         zarlariAt(1);
 
     }//GEN-LAST:event_zarAtActionPerformed
@@ -386,7 +388,7 @@ public class Game extends javax.swing.JFrame {
                     connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
                     this.setTitle("Connected Server: " + ip);
                     findAMatch.setEnabled(true);
-                    findAMatch.getAccessibleContext().setAccessibleDescription("arama"); 
+                    findAMatch.getAccessibleContext().setAccessibleDescription("arama");
                     jLabel8.setText("Connected server.");
                     return;
                 }
@@ -456,11 +458,12 @@ public class Game extends javax.swing.JFrame {
                     options[1]);
             if (n == 0) {
                 mesajlas("quit_the_match");
-               
+
                 JOptionPane.showMessageDialog(this,
-                "Maçı terk ettiniz"); 
-                
+                        "Maçı terk ettiniz");
+
                 jLabel9.setText("Maçı terk ettiniz");
+                restartGame();
 
             }
         } else if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
@@ -652,7 +655,7 @@ public class Game extends javax.swing.JFrame {
     MouseAdapter ortaZarMouse = new MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if (enemy != -2) {
+            if (enemy != -2 && macDurumu) {
                 oyuncuZarClicked(evt);
             }
         }
@@ -661,7 +664,7 @@ public class Game extends javax.swing.JFrame {
     MouseAdapter oyuncuZarMouse = new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if (enemy != -2) {
+            if (enemy != -2 && macDurumu) {
                 ortaZarClicked(evt);
             }
         }
@@ -1036,6 +1039,7 @@ public class Game extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this,
                 "Rakip maçı terketti");
         jLabel9.setText("Rakip, maçı terketti");
+
         restartGame();
 
     }
@@ -1044,6 +1048,8 @@ public class Game extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama">
     public void restartGame() {
         enemy = -2;
+        macDurumu = false;
+        tur = 0;
         restartDice();
         connectServer.setEnabled(true);
         findAMatch.setEnabled(true);
