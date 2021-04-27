@@ -174,13 +174,33 @@ class ClientListenThread extends Thread {
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("macBitir", pEnemy);
-                        
+
+                        Match silinecekMac = null;
+                        for (Match mac : FrmServer.maclar) {
+                            if (mac.player2 == pEnemy && mac.player1 == this.client.id) {
+                                silinecekMac = mac;
+                                System.out.println(mac.id + " is finished");
+                                break;
+                            }
+                        }
+                        FrmServer.maclar.remove(silinecekMac);
+
                     } else if (msg.toString().contains("quit_the_match")) {
                         System.out.println("mac erken bitti");
                         String s = msg.toString();
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("quit_the_match", pEnemy);
+                        
+                        Match silinecekMac = null;
+                        for (Match mac : FrmServer.maclar) {
+                            if (mac.player2 == pEnemy && mac.player1 == this.client.id) {
+                                silinecekMac = mac;
+                                System.out.println(mac.id + " is finished");
+                                break;
+                            }
+                        }
+                        FrmServer.maclar.remove(silinecekMac);
                     }
 //</editor-fold>
 

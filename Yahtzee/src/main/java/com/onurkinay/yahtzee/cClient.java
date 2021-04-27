@@ -99,6 +99,7 @@ class ClientListenThread extends Thread {
                         main.panel.oyunTur = -1;
                     } else if (msg.toString().contains("foundPlayerF")) {
                         main.panel.start(false);
+                        main.panel.oyunTur = 0;
                     }
                     main.panel.findAMatch.getAccessibleContext().setAccessibleDescription("terket");
                     main.panel.connectServer.setEnabled(false);

@@ -255,83 +255,84 @@ public class Game extends javax.swing.JFrame {
 
     private void gameCardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseClicked
         // TODO add your handling code here:
+        if (turn) {
+            int row = gameCard.rowAtPoint(evt.getPoint());
 
-        int row = gameCard.rowAtPoint(evt.getPoint());
-
-        int col = gameCard.columnAtPoint(evt.getPoint());
-        if (gameCard.getValueAt(row, 1) != null && "*".equals(gameCard.getValueAt(row, 1).toString().substring(0, 1))) {
-            jLabel1.setText("Seçemezsiniz");
-        } else {
-            if (col == 1) {
-                if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18) {
-                    jLabel1.setText("Hatalı Seçim");
-                    secilen = -1;
-                } else {
-                    // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
-                    jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
-                    secilen = row;
-                    if (sonKarar) {
-                        if (secilen != -1) {
-                            if (gameCard.getValueAt(secilen, 1) == null) {
-                                gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
-                            } else {
-                                if (secilen != 17) {
-                                    gameCard.setValueAt("*" + gameCard.getValueAt(secilen, 1).toString(), secilen, 1);
+            int col = gameCard.columnAtPoint(evt.getPoint());
+            if (gameCard.getValueAt(row, 1) != null && "*".equals(gameCard.getValueAt(row, 1).toString().substring(0, 1))) {
+                jLabel1.setText("Seçemezsiniz");
+            } else {
+                if (col == 1) {
+                    if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18) {
+                        jLabel1.setText("Hatalı Seçim");
+                        secilen = -1;
+                    } else {
+                        // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
+                        jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
+                        secilen = row;
+                        if (sonKarar) {
+                            if (secilen != -1) {
+                                if (gameCard.getValueAt(secilen, 1) == null) {
+                                    gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
+                                } else {
+                                    if (secilen != 17) {
+                                        gameCard.setValueAt("*" + gameCard.getValueAt(secilen, 1).toString(), secilen, 1);
+                                    }
                                 }
+                                for (Component zar : oyuncu.getComponents()) {
+
+                                    zar.setLocation(zar.getLocation().x, 30);
+                                    zar.removeMouseListener(ortaZarMouse);
+                                    zar.removeMouseListener(oyuncuZarMouse);
+
+                                    // zar.addMouseListener(oyuncuZarMouse);
+                                    oyuncu.remove(zar);
+                                    orta.add(zar);
+
+                                    refresh();
+
+                                }
+
+                                JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+
+                                for (JLabel img : images) {
+
+                                    img.removeMouseListener(oyuncuZarMouse);
+                                    img.removeMouseListener(ortaZarMouse);
+
+                                }
+                                if (oyunTur != -1) {
+                                    oyunTur++;
+                                }
+                                tur = 0;
+                                jLabel7.setText("Yeni raund");
+                                jLabel1.setText("Herhangi bir seçim yapılmadı");
+                                zarAt.setEnabled(false);
+                                sonKarar = false;
+                                jLabel9.setText("Waiting for enemy's move");
+                                turn = false;
+                                mesajlas("yourTurn[" + secilen + "]");
+                                secilen = -1;
+
+                                tabloTemizle();
+                                calculateScore(1);
+                                if (oyunTur >= 3) {
+                                    finishMatch();
+                                    return;
+                                }
+                            } else {
+                                //herhangi bir seçim yapılmadı
+                                jLabel1.setText("Herhangi bir seçim yapılmadı");
                             }
-                            for (Component zar : oyuncu.getComponents()) {
-
-                                zar.setLocation(zar.getLocation().x, 30);
-                                zar.removeMouseListener(ortaZarMouse);
-                                zar.removeMouseListener(oyuncuZarMouse);
-
-                                // zar.addMouseListener(oyuncuZarMouse);
-                                oyuncu.remove(zar);
-                                orta.add(zar);
-
-                                refresh();
-
-                            }
-
-                            JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
-
-                            for (JLabel img : images) {
-
-                                img.removeMouseListener(oyuncuZarMouse);
-                                img.removeMouseListener(ortaZarMouse);
-
-                            }
-                            if (oyunTur != -1) {
-                                oyunTur++;
-                            }
-                            tur = 0;
-                            jLabel7.setText("Yeni raund");
-                            jLabel1.setText("Herhangi bir seçim yapılmadı");
-                            zarAt.setEnabled(false);
-                            sonKarar = false;
-                            jLabel9.setText("Waiting for enemy's move");
-                            turn = false;
-                            mesajlas("yourTurn[" + secilen + "]");
-                            secilen = -1;
-
-                            tabloTemizle();
-                            calculateScore(1);
-                            if (oyunTur >= 3) {
-                                finishMatch();
-                                return;
-                            }
-                        } else {
-                            //herhangi bir seçim yapılmadı
-                            jLabel1.setText("Herhangi bir seçim yapılmadı");
                         }
                     }
+                } else {
+                    jLabel1.setText("Yanlış yere tıkladınız");
                 }
-            } else {
-                jLabel1.setText("Yanlış yere tıkladınız");
             }
+            gameCard.repaint();
+            gameCard.revalidate();
         }
-        gameCard.repaint();
-        gameCard.revalidate();
     }//GEN-LAST:event_gameCardMouseClicked
 
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
@@ -390,27 +391,30 @@ public class Game extends javax.swing.JFrame {
     private void gameCardMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseMoved
         int row = gameCard.rowAtPoint(evt.getPoint());
         int col = gameCard.columnAtPoint(evt.getPoint());
+        if (turn) {
+            if (row != rollOverRowIndex) {
+                if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18)) {
+                    if (col == 1) {
 
-        if (row != rollOverRowIndex) {
-            if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18)) {
-                if (col == 1) {
+                        rollOverRowIndex = row;
+                        rollOverColIndex = col;
 
-                    rollOverRowIndex = row;
-                    rollOverColIndex = col;
-
+                    } else {
+                        rollOverColIndex = -1;
+                        rollOverRowIndex = -1;
+                    }
                 } else {
                     rollOverColIndex = -1;
                     rollOverRowIndex = -1;
                 }
-            } else {
-                rollOverColIndex = -1;
-                rollOverRowIndex = -1;
             }
 
-            gameCard.repaint();
+        } else {
+            rollOverColIndex = -1;
+            rollOverRowIndex = -1;
         }
 
-
+        gameCard.repaint();
     }//GEN-LAST:event_gameCardMouseMoved
 
     private void gameCardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseExited
@@ -932,6 +936,14 @@ public class Game extends javax.swing.JFrame {
         if (oyunTur != -1) {
             mesajlas("macBitir");
         }
+
+        jLabel7.setText("");
+        jLabel8.setText("");
+        jLabel1.setText("");
+
+        findAMatch.setText("Find a Match");
+        findAMatch.getAccessibleContext().setAccessibleDescription("arama");
+
         int playerScore = Integer.parseInt(gameCard.getValueAt(21, 1).toString());
         int rivalScore = Integer.parseInt(gameCard.getValueAt(21, 2).toString());
 
@@ -943,6 +955,13 @@ public class Game extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(this,
                 mesaj);
+
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 22; j++) {
+                gameCard.setValueAt(null, j, i);
+            }
+        }
+        oyunTur = -1;
     }
 //</editor-fold>
 
@@ -966,7 +985,7 @@ public class Game extends javax.swing.JFrame {
             }
         }
         findAMatch.setText("Maçı bırak...");
-        sonKarar =false;
+        sonKarar = false;
         jLabel8.setText("Started a Match. Your enemy is " + enemy);
     }
 //</editor-fold>
@@ -1032,6 +1051,12 @@ public class Game extends javax.swing.JFrame {
         zarIsleri("4-2");
         zarIsleri("5-2");
 
+        for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 22; j++) {
+                gameCard.setValueAt(null, j, i);
+            }
+        }
+        oyunTur = -1;
     }
 
     /**
