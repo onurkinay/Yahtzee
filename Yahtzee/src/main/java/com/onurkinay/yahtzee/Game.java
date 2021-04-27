@@ -32,6 +32,7 @@ public class Game extends javax.swing.JFrame {
     public int oyunTur = 0;
     int secilen = -1;
     boolean sonKarar = false;
+    boolean sunucuVarmi = false;
 
     public Game() {
         initComponents();
@@ -268,9 +269,9 @@ public class Game extends javax.swing.JFrame {
                         secilen = -1;
                     } else {
                         // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
-                        jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
-                        secilen = row;
+                        //jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi"); 
                         if (sonKarar) {
+                             secilen = row;
                             if (secilen != -1) {
                                 if (gameCard.getValueAt(secilen, 1) == null) {
                                     gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
@@ -353,10 +354,13 @@ public class Game extends javax.swing.JFrame {
 
             connectServer.setText("Connect Server");
             connectServer.getAccessibleContext().setAccessibleDescription("connect");
+            sunucuVarmi = false;
 
+            jLabel8.setText("Disconnected from server.");
         }
 
         if (myClient == null) {
+            sunucuVarmi = false;
             Object[] servers = {"127.0.0.1", "3.142.40.78"};
             String ip = (String) JOptionPane.showInputDialog(
                     this,
@@ -369,15 +373,23 @@ public class Game extends javax.swing.JFrame {
 
             if ((ip != null) && (ip.length() > 0)) {
                 // myClient = new cClient("127.0.0.1", 5000);
-                myClient = new cClient(ip, 5000);
-                myClient.Start();
 
-                connectServer.setText("Disconnect Server");
-                connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
-                this.setTitle("Connected Server: " + ip);
-                findAMatch.setEnabled(true);
-                findAMatch.getAccessibleContext().setAccessibleDescription("arama");
-                return;
+                myClient = new cClient(ip, 5000);
+                if (!sunucuVarmi) {
+                    JOptionPane.showMessageDialog(main.panel,
+                            "Bağlantı hatası. Doğru sunucu bağlandığınızdan emin olunuz");
+                    myClient = null;
+                } else {
+                    myClient.Start();
+
+                    connectServer.setText("Disconnect Server");
+                    connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
+                    this.setTitle("Connected Server: " + ip);
+                    findAMatch.setEnabled(true);
+                    findAMatch.getAccessibleContext().setAccessibleDescription("arama"); 
+                    jLabel8.setText("Connected server.");
+                    return;
+                }
             }
 
         } else if (!myClient.isConnected) {
@@ -429,6 +441,7 @@ public class Game extends javax.swing.JFrame {
             jLabel8.setText("Connected and waiting a enemy");
             findAMatch.setText("Stop searching match");
             findAMatch.getAccessibleContext().setAccessibleDescription("aramaBirak");
+            connectServer.setEnabled(false);
         } else if ("terket".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
             //Custom button text
             Object[] options = {"Yes",
@@ -443,8 +456,11 @@ public class Game extends javax.swing.JFrame {
                     options[1]);
             if (n == 0) {
                 mesajlas("quit_the_match");
-                quittedMatch();
-                jLabel9.setText("Maçı terkettiniz");
+               
+                JOptionPane.showMessageDialog(this,
+                "Maçı terk ettiniz"); 
+                
+                jLabel9.setText("Maçı terk ettiniz");
 
             }
         } else if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
@@ -452,6 +468,7 @@ public class Game extends javax.swing.JFrame {
             jLabel8.setText("Stopped searching match");
             findAMatch.setText("Find a Match");
             findAMatch.getAccessibleContext().setAccessibleDescription("arama");
+            connectServer.setEnabled(true);
         }
 
     }//GEN-LAST:event_findAMatchActionPerformed
@@ -635,14 +652,18 @@ public class Game extends javax.swing.JFrame {
     MouseAdapter ortaZarMouse = new MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if(enemy != -2)  oyuncuZarClicked(evt);
+            if (enemy != -2) {
+                oyuncuZarClicked(evt);
+            }
         }
     };
 
     MouseAdapter oyuncuZarMouse = new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-              if(enemy != -2) ortaZarClicked(evt);
+            if (enemy != -2) {
+                ortaZarClicked(evt);
+            }
         }
     };
 
@@ -1012,6 +1033,8 @@ public class Game extends javax.swing.JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="maç terk edildiğinde">
     public void quittedMatch() {
+        JOptionPane.showMessageDialog(this,
+                "Rakip maçı terketti");
         jLabel9.setText("Rakip, maçı terketti");
         restartGame();
 
@@ -1043,6 +1066,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="zarları ilk yerlerine koyma">
     public void restartDice() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
@@ -1058,8 +1082,9 @@ public class Game extends javax.swing.JFrame {
             refresh();
 
         }
-      
+
     }
+//</editor-fold>
 
     /**
      * @param args the command line arguments

@@ -30,13 +30,19 @@ public class cClient {
 
     public cClient(String serverIp, int serverPort) {
         try {
+
             this.isConnected = false;
             this.serverIP = serverIp;
             this.serverPort = serverPort;
             this.socket = new Socket(this.serverIP, this.serverPort);
             this.cOutput = new ObjectOutputStream(this.socket.getOutputStream());
             this.cInput = new ObjectInputStream(this.socket.getInputStream());
-
+             main.panel.sunucuVarmi = true;
+        } catch (java.net.ConnectException e) {
+              main.panel.sunucuVarmi = false;
+             
+            
+            
         } catch (IOException ex) {
             Logger.getLogger(cClient.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -160,9 +166,8 @@ class ClientListenThread extends Thread {
                     main.panel.finishMatch();
                 } else if (msg.toString().contains("quit_the_match")) {
                     main.panel.quittedMatch();
-                    JOptionPane.showMessageDialog(main.panel,
-                            "Rakip maçı terketti");
-                    
+                   
+
                 }
 //</editor-fold>
 

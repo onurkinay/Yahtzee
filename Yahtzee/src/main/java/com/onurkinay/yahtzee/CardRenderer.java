@@ -57,13 +57,11 @@ public class CardRenderer extends JLabel implements TableCellRenderer {
         } else {
 
         }
-        if(value != null){
+       /* if(value != null){
         if(main.panel.secilen == row && column == 1 && !"*".equals(value.toString().substring(0, 1))){
              super.setBackground(Color.PINK);
-        }else{
-             
-        }
-        } 
+        }else{ }
+        } */
         
 
         return this;
