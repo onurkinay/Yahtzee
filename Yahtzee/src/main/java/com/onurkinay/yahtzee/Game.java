@@ -5,6 +5,7 @@
  */
 package com.onurkinay.yahtzee;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -18,12 +19,9 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * -maç ararken kapatılma bug 
- * -jtable görünüşü gui iyileştirme 
- * -yeni oyun başlatma
- * -accept butonu olmadan, tablodan seçme 
- * -maç sırasında oyunculardan biri çıkarsa
- * -5 oyun turu kaldırılma
+ * -maç ararken kapatılma bug -yeni oyun başlatma -accept butonu olmadan,
+ * tablodan seçme -maç sırasında oyunculardan biri çıkarsa - 5 oyun turu
+ * kaldırılma
  *
  * @author onur
  */
@@ -42,7 +40,7 @@ public class Game extends javax.swing.JFrame {
 
     public Game() {
         initComponents();
-        
+
         String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
         ArrayList<JLabel> zarlar = new ArrayList<>();
         for (Component gelenler : orta.getComponents()) {
@@ -65,12 +63,14 @@ public class Game extends javax.swing.JFrame {
             img.getAccessibleContext().setAccessibleDescription("" + k);
 
         }
-        
+
         jLabel7.setText("");
         jLabel8.setText("");
         jLabel1.setText("");
         jLabel9.setText("");
-        
+
+        gameCard.setDefaultRenderer(Object.class, new CardRenderer());
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -127,7 +127,7 @@ public class Game extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -136,9 +136,17 @@ public class Game extends javax.swing.JFrame {
         });
         gameCard.setEnabled(false);
         gameCard.setShowGrid(true);
+        gameCard.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                gameCardMouseMoved(evt);
+            }
+        });
         gameCard.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 gameCardMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                gameCardMouseExited(evt);
             }
         });
         jScrollPane1.setViewportView(gameCard);
@@ -246,28 +254,32 @@ public class Game extends javax.swing.JFrame {
 
     private void gameCardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseClicked
         // TODO add your handling code here:
+
         int row = gameCard.rowAtPoint(evt.getPoint());
 
         int col = gameCard.columnAtPoint(evt.getPoint());
-        if (col == 1) {
-            if (row == 6 || row == 7 || row == 8 || row == 9) {
-                jLabel1.setText("Hatalı Seçim");
-                secilen = -1;
-            } else {
-                // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
-                jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
-                secilen = row;
-            }
+        if (gameCard.getValueAt(row, 1) != null && "*".equals(gameCard.getValueAt(row, 1).toString().substring(0, 1))) {
+            jLabel1.setText("Seçemezsiniz");
         } else {
-            jLabel1.setText("Yanlış yere tıkladınız");
+            if (col == 1) {
+                if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18) {
+                    jLabel1.setText("Hatalı Seçim");
+                    secilen = -1;
+                } else {
+                    // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
+                    jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi");
+                    secilen = row;
+                }
+            } else {
+                jLabel1.setText("Yanlış yere tıkladınız");
+            }
         }
+        gameCard.repaint();
+        gameCard.revalidate();
     }//GEN-LAST:event_gameCardMouseClicked
 
     private void acceptBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptBtnActionPerformed
-        if (oyunTur >= 5) {
-            finishMatch();
-            return;
-        }
+
         if (secilen != -1) {
             if (gameCard.getValueAt(secilen, 1) == null) {
                 gameCard.setValueAt("*0", secilen, 1); // sıfır seçme şansı
@@ -313,10 +325,15 @@ public class Game extends javax.swing.JFrame {
 
             tabloTemizle();
             calculateScore(1);
+            if (oyunTur >= 5) {
+                finishMatch();
+                return;
+            }
         } else {
             //herhangi bir seçim yapılmadı
             jLabel1.setText("Herhangi bir seçim yapılmadı");
         }
+
     }//GEN-LAST:event_acceptBtnActionPerformed
 
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
@@ -329,8 +346,8 @@ public class Game extends javax.swing.JFrame {
     private void connectServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerActionPerformed
         // TODO add your handling code here: 
         if (myClient == null) {
-           // myClient = new cClient("127.0.0.1", 5000);
-           myClient = new cClient("3.137.174.67", 5000);
+            // myClient = new cClient("127.0.0.1", 5000);
+            myClient = new cClient("127.0.0.1", 5000);
             myClient.Start();
 
             mesajlas("match_me");
@@ -340,6 +357,40 @@ public class Game extends javax.swing.JFrame {
             myClient.Start();
         }
     }//GEN-LAST:event_connectServerActionPerformed
+
+    public int rollOverRowIndex = -1;
+    public int rollOverColIndex = -1;
+    private void gameCardMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseMoved
+        int row = gameCard.rowAtPoint(evt.getPoint());
+        int col = gameCard.columnAtPoint(evt.getPoint());
+
+        if (row != rollOverRowIndex) {
+            if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18)) {
+                if (col == 1) {
+
+                    rollOverRowIndex = row;
+                    rollOverColIndex = col;
+
+                } else {
+                    rollOverColIndex = -1;
+                    rollOverRowIndex = -1;
+                }
+            } else {
+                rollOverColIndex = -1;
+                rollOverRowIndex = -1;
+            }
+
+            gameCard.repaint();
+        }
+
+
+    }//GEN-LAST:event_gameCardMouseMoved
+
+    private void gameCardMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseExited
+        rollOverRowIndex = -1;
+        rollOverColIndex = -1;
+        gameCard.repaint();
+    }//GEN-LAST:event_gameCardMouseExited
 
     //<editor-fold defaultstate="collapsed" desc="rastgele zar atar">
     public void zarlariAt(int player) {
@@ -579,7 +630,6 @@ public class Game extends javax.swing.JFrame {
     }
 
     //</editor-fold>
-    
     //<editor-fold defaultstate="collapsed" desc="gelen zarları döner">
     public String gelenZarlar() {
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -862,9 +912,13 @@ public class Game extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="gameCard'a veri girme">
     public boolean tabloyaVeriGir(int player, int satir, Object veri) {
         if (gameCard.getValueAt(satir, player) != null && "*".equals(gameCard.getValueAt(satir, player).toString().substring(0, 1))) {
+
             return false;
         } else {
             gameCard.setValueAt(veri, satir, player);
+            gameCard.repaint();
+            gameCard.revalidate();
+
             return true;
         }
     }

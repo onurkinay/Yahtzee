@@ -65,8 +65,8 @@
                   <Data value="null"/>
                   <Data value="TOTAL"/>
                 </Column>
-                <Column editable="true" title="You" type="java.lang.Integer"/>
-                <Column editable="true" title="Enemy" type="java.lang.Integer"/>
+                <Column editable="true" title="You" type="java.lang.Object"/>
+                <Column editable="true" title="Enemy" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -95,7 +95,9 @@
             </Property>
           </Properties>
           <Events>
+            <EventHandler event="mouseMoved" listener="java.awt.event.MouseMotionListener" parameters="java.awt.event.MouseEvent" handler="gameCardMouseMoved"/>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="gameCardMouseClicked"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="gameCardMouseExited"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
