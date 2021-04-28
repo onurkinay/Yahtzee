@@ -146,11 +146,7 @@ class ClientListenThread extends Thread {
                     }
                     System.out.println("secilen puan geldi");
 
-                    main.panel.zarIsleri("1-2");
-                    main.panel.zarIsleri("2-2");
-                    main.panel.zarIsleri("3-2");
-                    main.panel.zarIsleri("4-2");
-                    main.panel.zarIsleri("5-2");
+                    main.panel.restartDice();
 
                     main.panel.zarAt.setEnabled(true);
                     main.panel.turn = true;
@@ -178,6 +174,8 @@ class ClientListenThread extends Thread {
                 this.client.Close();
                 Logger.getLogger(ClientListenThread.class.getName()).log(Level.SEVERE, null, ex);
 
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ClientListenThread.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
