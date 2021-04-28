@@ -11,6 +11,8 @@ import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -411,21 +413,22 @@ public class Game extends javax.swing.JFrame {
 
                     myClient.Start();
                     if ((nickName != null) && (nickName.length() > 0)) {
-                        gameCard.getColumnModel().getColumn(1).setHeaderValue(nickName);
+                        changeTableHeader(nickName, 1);
                         connectServer.setText("Disconnect Server");
                         connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
                         this.setTitle("Connected Server: " + ip + " - " + title);
                         findAMatch.setEnabled(true);
                         findAMatch.getAccessibleContext().setAccessibleDescription("arama");
                         jLabel8.setText("Connected server.");
+
                         return;
                     }
                 }
-                }
-
-            } else if (!myClient.isConnected) {
-                myClient.Start();
             }
+
+        } else if (!myClient.isConnected) {
+            myClient.Start();
+        }
 
     }//GEN-LAST:event_connectServerActionPerformed
 
@@ -472,7 +475,6 @@ public class Game extends javax.swing.JFrame {
             mesajlas("match_me<" + nickName + ">");
             jLabel8.setText("Connected and waiting a enemy");
             findAMatch.setText("Stop searching match");
-            gameCard.getColumnModel().getColumn(1).setHeaderValue(nickName);
 
             findAMatch.getAccessibleContext().setAccessibleDescription("aramaBirak");
             connectServer.setEnabled(false);
@@ -1018,7 +1020,7 @@ public class Game extends javax.swing.JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="oyunu başlat">
     public void start(boolean first, String rivalName) {
-       
+
         if (first) {
             zarAt.setEnabled(true);
             jLabel9.setText("Your turn!");
@@ -1033,8 +1035,8 @@ public class Game extends javax.swing.JFrame {
         }
         findAMatch.setText("Maçı bırak...");
         sonKarar = false;
-        jLabel8.setText("Started a Match");
-        gameCard.getColumnModel().getColumn(2).setHeaderValue(rivalName);
+        jLabel8.setText("Started a Match"); 
+        changeTableHeader(rivalName, 2);
     }
 //</editor-fold>
 
@@ -1091,7 +1093,7 @@ public class Game extends javax.swing.JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama">
     public void restartGame() {
-        gameCard.getColumnModel().getColumn(2).setHeaderValue("Rival");
+        changeTableHeader("Rival", 2);
         enemy = -2;
         macDurumu = false;
         tur = 0;
@@ -1149,6 +1151,17 @@ public class Game extends javax.swing.JFrame {
         return false;// seçilebilecek puan yok
     }
 //</editor-fold>
+
+    public void changeTableHeader(String name, int col) {
+        gameCard.getColumnModel().getColumn(col).setHeaderValue(name);
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        gameCard.getTableHeader().repaint();
+        gameCard.repaint();
+    }
 
     /**
      * @param args the command line arguments

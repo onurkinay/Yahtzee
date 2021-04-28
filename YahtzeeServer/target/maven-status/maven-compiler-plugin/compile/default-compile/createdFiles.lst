@@ -8,5 +8,4 @@ com\onurkinay\yahtzeeserver\RunMain.class
 com\onurkinay\yahtzeeserver\FrmServer$2.class
 com\onurkinay\yahtzeeserver\SClient.class
 com\onurkinay\yahtzeeserver\ClientListenThread.class
-.netbeans_automatic_build
 com\onurkinay\yahtzeeserver\Match.class
