@@ -97,20 +97,23 @@ class ClientListenThread extends Thread {
                 //<editor-fold defaultstate="collapsed" desc="hareketler">
                 if (msg.toString().contains("match_me")) {
                     boolean bulundu = false;
+                    String s = msg.toString();
+                    String playerName = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
                     for (Match mac : FrmServer.maclar) {
                         if (mac.player2 == -1) {
                             mac.player2 = this.client.id;
+                            mac.player2Name = playerName;
                             FrmServer.clientMessagesModel.addElement("Match#" + mac.id + " Players: " + mac.player1 + " - " + mac.player2);
 
-                            this.client.SendMessage("foundPlayerF#" + mac.player1);
-                            FrmServer.myserver.SendSelectedClientMessage("foundPlayerT#" + mac.player2, mac.player1);
+                            this.client.SendMessage("foundPlayerF#" + mac.player1 + "#" + mac.player1Name);
+                            FrmServer.myserver.SendSelectedClientMessage("foundPlayerT#" + mac.player2 + "#" + mac.player2Name, mac.player1);
                             bulundu = true;
                             break;
                         }
                     }
 
                     if (!bulundu) {
-                        Match yeniMac = new Match(this.client.id);
+                        Match yeniMac = new Match(this.client.id, playerName);
                         FrmServer.maclar.add(yeniMac);
                     }
 
@@ -191,7 +194,7 @@ class ClientListenThread extends Thread {
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("quit_the_match", pEnemy);
-                        
+
                         Match silinecekMac = null;
                         for (Match mac : FrmServer.maclar) {
                             if (mac.player2 == pEnemy && mac.player1 == this.client.id) {

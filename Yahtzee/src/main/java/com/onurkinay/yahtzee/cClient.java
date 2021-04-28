@@ -98,13 +98,14 @@ class ClientListenThread extends Thread {
                 System.out.println(msg.toString());
                 //<editor-fold defaultstate="collapsed" desc="hareketler">
                 if (msg.toString().contains("foundPlayer")) {//maç eşleştirme sistemi
-                    main.panel.enemy = Integer.parseInt(msg.toString().substring(13));
+                    String[] player = msg.toString().substring(13).split("#");
+                    main.panel.enemy = Integer.parseInt(player[0]);
 
                     if (msg.toString().contains("foundPlayerT")) {//ilk kim başlıyor??
-                        main.panel.start(true);
+                        main.panel.start(true, player[1]);
                         main.panel.oyunTur = -1;
                     } else if (msg.toString().contains("foundPlayerF")) {
-                        main.panel.start(false);
+                        main.panel.start(false, player[1]);
                         main.panel.oyunTur = 0;
                     }
                     main.panel.findAMatch.getAccessibleContext().setAccessibleDescription("terket");

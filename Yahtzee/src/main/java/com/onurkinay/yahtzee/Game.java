@@ -28,6 +28,7 @@ public class Game extends javax.swing.JFrame {
     public DefaultListModel clientMessagesModel;
     cClient myClient = null;
     public int enemy = -2;
+    public String nickName = "Nickname giriniz...";
     public boolean turn = false;
     int tur = 0;
     public int oyunTur = 0;
@@ -130,7 +131,7 @@ public class Game extends javax.swing.JFrame {
                 {"TOTAL", null, null}
             },
             new String [] {
-                "", "You", "Enemy"
+                "", "You", "Rival"
             }
         ) {
             Class[] types = new Class [] {
@@ -398,21 +399,33 @@ public class Game extends javax.swing.JFrame {
                             "Bağlantı hatası. Doğru sunucu bağlandığınızdan emin olunuz");
                     myClient = null;
                 } else {
+
+                    nickName = (String) JOptionPane.showInputDialog(
+                            this,
+                            "Oyuna başlamadan önce nickname giriniz:\n",
+                            "Nickname",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            nickName);
+
                     myClient.Start();
-
-                    connectServer.setText("Disconnect Server");
-                    connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
-                    this.setTitle("Connected Server: " + ip + " - " + title);
-                    findAMatch.setEnabled(true);
-                    findAMatch.getAccessibleContext().setAccessibleDescription("arama");
-                    jLabel8.setText("Connected server.");
-                    return;
+                    if ((nickName != null) && (nickName.length() > 0)) {
+                        gameCard.getColumnModel().getColumn(1).setHeaderValue(nickName);
+                        connectServer.setText("Disconnect Server");
+                        connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
+                        this.setTitle("Connected Server: " + ip + " - " + title);
+                        findAMatch.setEnabled(true);
+                        findAMatch.getAccessibleContext().setAccessibleDescription("arama");
+                        jLabel8.setText("Connected server.");
+                        return;
+                    }
                 }
-            }
+                }
 
-        } else if (!myClient.isConnected) {
-            myClient.Start();
-        }
+            } else if (!myClient.isConnected) {
+                myClient.Start();
+            }
 
     }//GEN-LAST:event_connectServerActionPerformed
 
@@ -423,7 +436,7 @@ public class Game extends javax.swing.JFrame {
         int col = gameCard.columnAtPoint(evt.getPoint());
         if (turn) {
             if (row != rollOverRowIndex) {
-                if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18||row==17)) {
+                if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18 || row == 17)) {
                     if (col == 1) {
 
                         rollOverRowIndex = row;
@@ -455,11 +468,15 @@ public class Game extends javax.swing.JFrame {
 
     private void findAMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findAMatchActionPerformed
         if ("arama".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
-            mesajlas("match_me");
+
+            mesajlas("match_me<" + nickName + ">");
             jLabel8.setText("Connected and waiting a enemy");
             findAMatch.setText("Stop searching match");
+            gameCard.getColumnModel().getColumn(1).setHeaderValue(nickName);
+
             findAMatch.getAccessibleContext().setAccessibleDescription("aramaBirak");
             connectServer.setEnabled(false);
+
         } else if ("terket".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
             //Custom button text
             Object[] options = {"Yes",
@@ -1000,8 +1017,8 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="oyunu başlat">
-    public void start(boolean first) {
-        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+    public void start(boolean first, String rivalName) {
+       
         if (first) {
             zarAt.setEnabled(true);
             jLabel9.setText("Your turn!");
@@ -1016,7 +1033,8 @@ public class Game extends javax.swing.JFrame {
         }
         findAMatch.setText("Maçı bırak...");
         sonKarar = false;
-        jLabel8.setText("Started a Match. Your enemy is " + enemy);
+        jLabel8.setText("Started a Match");
+        gameCard.getColumnModel().getColumn(2).setHeaderValue(rivalName);
     }
 //</editor-fold>
 
@@ -1073,6 +1091,7 @@ public class Game extends javax.swing.JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama">
     public void restartGame() {
+        gameCard.getColumnModel().getColumn(2).setHeaderValue("Rival");
         enemy = -2;
         macDurumu = false;
         tur = 0;
