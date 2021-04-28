@@ -267,7 +267,7 @@ public class Game extends javax.swing.JFrame {
                 jLabel1.setText("Seçemezsiniz");
             } else {
                 if (col == 1) {
-                    if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18) {
+                    if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18 || row == 17) {
                         jLabel1.setText("Hatalı Seçim");
                         secilen = -1;
                     } else {
@@ -422,7 +422,7 @@ public class Game extends javax.swing.JFrame {
         int col = gameCard.columnAtPoint(evt.getPoint());
         if (turn) {
             if (row != rollOverRowIndex) {
-                if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18)) {
+                if (!(row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18||row==17)) {
                     if (col == 1) {
 
                         rollOverRowIndex = row;
@@ -1047,7 +1047,7 @@ public class Game extends javax.swing.JFrame {
         for (int i = 1; i <= 2; i++) {
 
             for (int j = 0; j < 20; j++) {
-                if (j == 7 || j == 8 || j == 17 || j == 19) {
+                if (j == 7 || j == 8 || j == 17 || j == 19 || j == 17) {
                     continue;
                 }
                 if (gameCard.getValueAt(j, i) != null && "*".equals(gameCard.getValueAt(j, i).toString().substring(0, 1))) {

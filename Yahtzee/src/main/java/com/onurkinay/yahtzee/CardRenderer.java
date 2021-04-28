@@ -26,7 +26,7 @@ public class CardRenderer extends JLabel implements TableCellRenderer {
 
         if (column == 0) {
             super.setHorizontalAlignment(JLabel.CENTER);
-            if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18) {
+            if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18 || row == 17) {
                 super.setBackground(Color.RED);
             } else {
                 super.setBackground(Color.GREEN);
