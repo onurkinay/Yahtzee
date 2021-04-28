@@ -150,7 +150,6 @@ class ClientListenThread extends Thread {
                     }
                     System.out.println("secilen puan geldi");
 
-                    main.panel.restartDice();
 
                     main.panel.zarAt.setEnabled(true);
                     main.panel.turn = true;
@@ -161,6 +160,8 @@ class ClientListenThread extends Thread {
 
                     main.panel.jLabel9.setText("Your turn!");
                     main.panel.jLabel7.setText("Yeni raund");
+                     
+                    main.panel.restartDice();
 
                 } else if (msg.toString().contains("macBitir")) {
                     main.panel.finishMatch();

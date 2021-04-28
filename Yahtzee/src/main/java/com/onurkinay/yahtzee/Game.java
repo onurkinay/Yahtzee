@@ -161,7 +161,7 @@ public class Game extends javax.swing.JFrame {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("jLabel1");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 420, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 430, -1, -1));
 
         zarAt.setText("Roll Dice");
         zarAt.setEnabled(false);
@@ -278,15 +278,20 @@ public class Game extends javax.swing.JFrame {
                             if (secilen != -1) {
 
                                 if (gameCard.getValueAt(secilen, 1) == null) {
-                                    if (secilen == 16) {
-                                        gameCard.setValueAt("*0", secilen, 1); // ilk olarak yahtzee seçmeye zorlama sıfır seçme şansı
-                                    } else {
-                                        if (gameCard.getValueAt(16, 1) != null && "*0".equals(gameCard.getValueAt(16, 1).toString())) {
-                                            gameCard.setValueAt("*0", secilen, 1); // yahtzee 0 ise istediğini sıfır verebilir
+                                    if (!canSelectScore()) {
+                                        if (secilen == 16) {
+                                            gameCard.setValueAt("*0", secilen, 1); // ilk olarak yahtzee seçmeye zorlama sıfır seçme şansı
                                         } else {
-                                            jLabel1.setText("Sadece boş yahtzee seçebilirsiniz");
-                                            return;
+                                            if (gameCard.getValueAt(16, 1) != null && "*0".equals(gameCard.getValueAt(16, 1).toString())) {
+                                                gameCard.setValueAt("*0", secilen, 1); // yahtzee 0 ise istediğini sıfır verebilir
+                                            } else {
+                                                jLabel1.setText("Sadece boş yahtzee seçebilirsiniz");
+                                                return;
+                                            }
                                         }
+                                    } else {
+                                        jLabel1.setText("Seçilebilecek bir ve birden fazla puan durumu var");
+                                        return;
                                     }
                                 } else {
                                     if (secilen != 17) {
@@ -338,6 +343,8 @@ public class Game extends javax.swing.JFrame {
                                 //herhangi bir seçim yapılmadı
                                 jLabel1.setText("");
                             }
+                        } else {
+                            jLabel1.setText("Bütün zarları almalısınız");
                         }
                     }
                 } else {
@@ -664,7 +671,7 @@ public class Game extends javax.swing.JFrame {
     MouseAdapter ortaZarMouse = new MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if (enemy != -2 && macDurumu && zarAt.isEnabled()) {
+            if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
                 oyuncuZarClicked(evt);
             }
         }
@@ -673,7 +680,7 @@ public class Game extends javax.swing.JFrame {
     MouseAdapter oyuncuZarMouse = new java.awt.event.MouseAdapter() {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
-            if (enemy != -2 && macDurumu && zarAt.isEnabled()) {
+            if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
                 ortaZarClicked(evt);
             }
         }
@@ -1103,10 +1110,23 @@ public class Game extends javax.swing.JFrame {
             rakip.remove(zar);
             oyuncu.remove(zar);
             orta.add(zar);
-            refresh();
 
         }
+        refresh();
+    }
+//</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="seçilebilecek puan var mı yok mu">
+    public boolean canSelectScore() {
+        for (int j = 0; j < 20; j++) {
+            if (j == 7 || j == 8 || j == 17 || j == 19) {
+                continue;
+            }
+            if (gameCard.getValueAt(j, 1) != null && !"*".equals(gameCard.getValueAt(j, 1).toString().substring(0, 1))) {
+                return true;//seçilebilecek puan var
+            }
+        }
+        return false;// seçilebilecek puan yok
     }
 //</editor-fold>
 
