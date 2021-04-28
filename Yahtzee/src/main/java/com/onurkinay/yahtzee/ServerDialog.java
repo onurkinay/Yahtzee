@@ -35,7 +35,7 @@ public class ServerDialog extends JDialog implements ActionListener {
     public ServerDialog(Frame parent) {
 
         super(parent, "Server giriniz", true);
-
+        setResizable(false);
         String[] resmiServerlar = {"yahtzee.onurkinay.com.tr", "127.0.0.1"};
 
         Point loc = parent.getLocation();
@@ -43,7 +43,7 @@ public class ServerDialog extends JDialog implements ActionListener {
         data = new String[1];
         JPanel panel = new JPanel();
         panel.setLayout(null);
- 
+
         JLabel serverLabel = new JLabel("Server giriniz:");
         serverIP = new JTextField(15);
         resmiKullan = new JCheckBox("Resmi Sunucu Kullan");
@@ -53,7 +53,7 @@ public class ServerDialog extends JDialog implements ActionListener {
         resmi.setVisible(false);
 
         panel.add(serverLabel);
-        panel.add(serverIP); 
+        panel.add(serverIP);
         panel.add(resmiKullan);
         panel.add(resmi);
         panel.add(btnOk);
@@ -63,7 +63,7 @@ public class ServerDialog extends JDialog implements ActionListener {
         resmi.setBounds(90, 10, 265, 25);
         serverIP.setBounds(90, 10, 265, 25);
         btnOk.setBounds(155, 70, 95, 25);
-        btnCancel.setBounds(255, 70, 100, 25); 
+        btnCancel.setBounds(255, 70, 100, 25);
         resmiKullan.setBounds(90, 40, 265, 25);
 
         btnOk.addActionListener(this);

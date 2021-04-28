@@ -72,6 +72,7 @@ public class Game extends javax.swing.JFrame {
         connectServer.getAccessibleContext().setAccessibleDescription("connect");
 
         setTitle(title);
+        setResizable(false);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
