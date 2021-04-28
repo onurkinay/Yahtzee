@@ -142,7 +142,11 @@ class ClientListenThread extends Thread {
                     String s = msg.toString();
                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));
                     if (secilen != 17) {
+                        if( main.panel.gameCard.getValueAt(secilen, 2) != null ){
                         main.panel.gameCard.setValueAt("*" + main.panel.gameCard.getValueAt(secilen, 2).toString(), secilen, 2);
+                        }else{
+                            main.panel.gameCard.setValueAt("*0", secilen, 2);
+                        }
                     }
                     System.out.println("secilen puan geldi");
 

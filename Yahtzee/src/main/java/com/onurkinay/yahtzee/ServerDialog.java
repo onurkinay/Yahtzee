@@ -43,19 +43,17 @@ public class ServerDialog extends JDialog implements ActionListener {
         data = new String[1];
         JPanel panel = new JPanel();
         panel.setLayout(null);
-
-        JLabel resmiLabel = new JLabel("Resmi Sunucu:");
+ 
         JLabel serverLabel = new JLabel("Server giriniz:");
         serverIP = new JTextField(15);
-        resmiKullan = new JCheckBox("Kullan");
+        resmiKullan = new JCheckBox("Resmi Sunucu Kullan");
         btnOk = new JButton("Ok");
         btnCancel = new JButton("Cancel");
         resmi = new JComboBox<String>(resmiServerlar);
         resmi.setVisible(false);
 
         panel.add(serverLabel);
-        panel.add(serverIP);
-        panel.add(resmiLabel);
+        panel.add(serverIP); 
         panel.add(resmiKullan);
         panel.add(resmi);
         panel.add(btnOk);
@@ -65,9 +63,8 @@ public class ServerDialog extends JDialog implements ActionListener {
         resmi.setBounds(90, 10, 265, 25);
         serverIP.setBounds(90, 10, 265, 25);
         btnOk.setBounds(155, 70, 95, 25);
-        btnCancel.setBounds(255, 70, 100, 25);
-        resmiLabel.setBounds(5, 40, 100, 25);
-        resmiKullan.setBounds(90, 40, 65, 25);
+        btnCancel.setBounds(255, 70, 100, 25); 
+        resmiKullan.setBounds(90, 40, 265, 25);
 
         btnOk.addActionListener(this);
 
