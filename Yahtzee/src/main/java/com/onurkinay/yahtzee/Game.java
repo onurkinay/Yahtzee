@@ -1152,6 +1152,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="tablo header değiştirme">
     public void changeTableHeader(String name, int col) {
         gameCard.getColumnModel().getColumn(col).setHeaderValue(name);
         try {
@@ -1162,6 +1163,7 @@ public class Game extends javax.swing.JFrame {
         gameCard.getTableHeader().repaint();
         gameCard.repaint();
     }
+//</editor-fold>
 
     /**
      * @param args the command line arguments
