@@ -162,12 +162,14 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[253, 236]"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="zar1" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
           </Properties>
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="zar1"/>
+            <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" value=""/>
           </AccessibilityProperties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -184,6 +186,7 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="zar2" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
@@ -206,6 +209,7 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="zar3" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
@@ -228,6 +232,7 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="zar4" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
@@ -250,6 +255,7 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
+            <Property name="name" type="java.lang.String" value="zar5" noResource="true"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[50, 50]"/>
             </Property>
@@ -298,7 +304,7 @@
     <Container class="javax.swing.JPanel" name="rakip">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="0" green="ff" red="33" type="rgb"/>
+          <Color blue="40" green="40" id="darkGray" palette="1" red="40" type="palette"/>
         </Property>
         <Property name="name" type="java.lang.String" value="orta" noResource="true"/>
       </Properties>
@@ -356,7 +362,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="findAMatch">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Find a Match"/>
+        <Property name="text" type="java.lang.String" value="Find a Game"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="findAMatchActionPerformed"/>

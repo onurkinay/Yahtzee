@@ -11,7 +11,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -121,6 +120,7 @@ class ClientListenThread extends Thread {
                     System.out.println("düşman zarlari geldi");
                     String s = msg.toString();
                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
+                    
                     main.panel.zarlariDuzenle(zarlar);
 
                 } else if (msg.toString().contains("ZarAl")) {

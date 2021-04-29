@@ -9,6 +9,7 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -17,6 +18,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import java.util.Collections;
 
 /**
  * @author onur
@@ -30,7 +32,7 @@ public class Game extends javax.swing.JFrame {
     public DefaultListModel clientMessagesModel;
     cClient myClient = null;
     public int enemy = -2;
-    public String nickName = "Nickname giriniz...";
+    public String nickName = "Enter a nickname";
     public boolean turn = false;
     int tur = 0;
     public int oyunTur = 0;
@@ -76,7 +78,19 @@ public class Game extends javax.swing.JFrame {
 
         setTitle(title);
         setResizable(false);
+        //<editor-fold defaultstate="collapsed" desc="design'de yapılabilir">
+
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        int x = 140;
+
+        for (int i = 0; i < 5; i++) {
+
+            images[i].getAccessibleContext().setAccessibleName(images[i].getLocation().x + "-" + x);
+            x += 60;
+        }
+//</editor-fold>
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -183,14 +197,17 @@ public class Game extends javax.swing.JFrame {
         jLabel2.setText("ss");
         jLabel2.setMaximumSize(new java.awt.Dimension(253, 236));
         jLabel2.setMinimumSize(new java.awt.Dimension(253, 236));
+        jLabel2.setName("zar1"); // NOI18N
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel2);
         jLabel2.setBounds(140, 30, 50, 50);
         jLabel2.getAccessibleContext().setAccessibleName("zar1");
+        jLabel2.getAccessibleContext().setAccessibleDescription("");
 
         jLabel3.setText("ss");
         jLabel3.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel3.setName("zar2"); // NOI18N
         jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel3);
         jLabel3.setBounds(200, 30, 50, 50);
@@ -199,6 +216,7 @@ public class Game extends javax.swing.JFrame {
         jLabel4.setText("ss");
         jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel4.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel4.setName("zar3"); // NOI18N
         jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel4);
         jLabel4.setBounds(260, 30, 50, 50);
@@ -207,6 +225,7 @@ public class Game extends javax.swing.JFrame {
         jLabel5.setText("ss");
         jLabel5.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel5.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel5.setName("zar4"); // NOI18N
         jLabel5.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel5);
         jLabel5.setBounds(320, 30, 50, 50);
@@ -215,6 +234,7 @@ public class Game extends javax.swing.JFrame {
         jLabel6.setText("ss");
         jLabel6.setMaximumSize(new java.awt.Dimension(50, 50));
         jLabel6.setMinimumSize(new java.awt.Dimension(50, 50));
+        jLabel6.setName("zar5"); // NOI18N
         jLabel6.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel6);
         jLabel6.setBounds(380, 30, 50, 50);
@@ -230,7 +250,7 @@ public class Game extends javax.swing.JFrame {
         oyuncu.setLayout(null);
         getContentPane().add(oyuncu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 600, 120));
 
-        rakip.setBackground(new java.awt.Color(51, 255, 0));
+        rakip.setBackground(java.awt.Color.darkGray);
         rakip.setName("orta"); // NOI18N
         rakip.setLayout(null);
         getContentPane().add(rakip, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 600, 120));
@@ -249,7 +269,7 @@ public class Game extends javax.swing.JFrame {
         jLabel9.setText("jLabel9");
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, -1, -1));
 
-        findAMatch.setText("Find a Match");
+        findAMatch.setText("Find a Game");
         findAMatch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 findAMatchActionPerformed(evt);
@@ -263,16 +283,16 @@ public class Game extends javax.swing.JFrame {
 
     private void gameCardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseClicked
         // TODO add your handling code here:
-        if (turn) {
+        if (turn && tur != 0) {
             int row = gameCard.rowAtPoint(evt.getPoint());
 
             int col = gameCard.columnAtPoint(evt.getPoint());
             if (gameCard.getValueAt(row, 1) != null && "*".equals(gameCard.getValueAt(row, 1).toString().substring(0, 1))) {
-                jLabel1.setText("Seçemezsiniz");
+                jLabel1.setText("Cannot be selected");
             } else {
                 if (col == 1) {
                     if (row == 6 || row == 7 || row == 8 || row == 9 || row == 21 || row == 20 || row == 19 || row == 18 || row == 17) {
-                        jLabel1.setText("Hatalı Seçim");
+                        jLabel1.setText("Cannot be selected");
                         secilen = -1;
                     } else {
                         // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
@@ -283,19 +303,24 @@ public class Game extends javax.swing.JFrame {
 
                                 if (gameCard.getValueAt(secilen, 1) == null) {
                                     if (!canSelectScore()) {
-                                        if (secilen == 16) {
-                                            gameCard.setValueAt("*0", secilen, 1); // ilk olarak yahtzee seçmeye zorlama sıfır seçme şansı
-                                        } else {
-                                            if (gameCard.getValueAt(16, 1) != null && "*0".equals(gameCard.getValueAt(16, 1).toString())) {
-                                                gameCard.setValueAt("*0", secilen, 1); // yahtzee 0 ise istediğini sıfır verebilir
-                                            } else {
-                                                jLabel1.setText("Sadece boş yahtzee seçebilirsiniz");
-                                                return;
-                                            }
-                                        }
+                                        gameCard.setValueAt("*0", secilen, 1);
+
                                     } else {
-                                        jLabel1.setText("Seçilebilecek bir ve birden fazla puan durumu var");
-                                        return;
+                                        Object[] options = {"Yes",
+                                            "No"};
+                                        int n = JOptionPane.showOptionDialog(this,
+                                                "You have categories to be selected. If continue, your categories will be 0 and cannot be selected again",
+                                                "Warning",
+                                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                                JOptionPane.QUESTION_MESSAGE,
+                                                null,
+                                                options,
+                                                options[1]);
+                                        if (n == 1) {
+                                            return;
+                                        } else {
+                                            gameCard.setValueAt("*0", secilen, 1);
+                                        }
                                     }
                                 } else {
                                     if (secilen != 17) {
@@ -304,7 +329,7 @@ public class Game extends javax.swing.JFrame {
                                 }
                                 for (Component zar : oyuncu.getComponents()) {
 
-                                    zar.setLocation(zar.getLocation().x, 30);
+                                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
                                     zar.removeMouseListener(ortaZarMouse);
                                     zar.removeMouseListener(oyuncuZarMouse);
 
@@ -328,19 +353,29 @@ public class Game extends javax.swing.JFrame {
                                     oyunTur++;
                                 }
                                 tur = 0;
-                                jLabel7.setText("Yeni raund");
+                                jLabel7.setText("New lap");
                                 jLabel1.setText("");
                                 zarAt.setEnabled(false);
                                 sonKarar = false;
-                                jLabel9.setText("Waiting for enemy's move");
+                                jLabel9.setText("Waiting for rival's move");
                                 turn = false;
+                                try {
+                                    restartDice();
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                                 mesajlas("yourTurn[" + secilen + "]");
                                 secilen = -1;
 
                                 tabloTemizle();
                                 calculateScore(1);
                                 if (oyunTur >= 13) {
-                                    finishMatch();
+                                    try {
+                                        finishMatch();
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(Game.class
+                                                .getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     return;
                                 }
                             } else {
@@ -348,11 +383,11 @@ public class Game extends javax.swing.JFrame {
                                 jLabel1.setText("");
                             }
                         } else {
-                            jLabel1.setText("Bütün zarları almalısınız");
+                            jLabel1.setText("You have to take all dices");
                         }
                     }
                 } else {
-                    jLabel1.setText("Yanlış yere tıkladınız");
+                    jLabel1.setText("Cannot be selected");
                 }
             }
             gameCard.repaint();
@@ -363,9 +398,16 @@ public class Game extends javax.swing.JFrame {
     private void zarAtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zarAtActionPerformed
 
         if (!sonKarar) {
+
             mesajlas("e#zarAt");
             macDurumu = true;
-            zarlariAt(1);
+            try {
+                zarlariAt(1);
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Game.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_zarAtActionPerformed
 
@@ -398,13 +440,13 @@ public class Game extends javax.swing.JFrame {
                 myClient = new cClient(ip, 5000);
                 if (!sunucuVarmi) {
                     JOptionPane.showMessageDialog(main.panel,
-                            "Bağlantı hatası. Doğru sunucu bağlandığınızdan emin olunuz");
+                            "Connection error. Be sure if correct server to connect");
                     myClient = null;
                 } else {
 
                     nickName = (String) JOptionPane.showInputDialog(
                             this,
-                            "Oyuna başlamadan önce nickname giriniz:\n",
+                            "Before starting game, enter a nickname:\n",
                             "Nickname",
                             JOptionPane.PLAIN_MESSAGE,
                             null,
@@ -473,8 +515,8 @@ public class Game extends javax.swing.JFrame {
         if ("arama".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
 
             mesajlas("match_me<" + nickName + ">");
-            jLabel8.setText("Connected and waiting a enemy");
-            findAMatch.setText("Stop searching match");
+            jLabel8.setText("Created a game and waiting a rival");
+            findAMatch.setText("Stop searching game");
 
             findAMatch.getAccessibleContext().setAccessibleDescription("aramaBirak");
             connectServer.setEnabled(false);
@@ -484,8 +526,8 @@ public class Game extends javax.swing.JFrame {
             Object[] options = {"Yes",
                 "No"};
             int n = JOptionPane.showOptionDialog(this,
-                    "Maçı bırakmak istediğinizden emin misiniz",
-                    "Maçı bırakma",
+                    "Are you sure leaving the game",
+                    "Leaving game",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE,
                     null,
@@ -495,16 +537,21 @@ public class Game extends javax.swing.JFrame {
                 mesajlas("quit_the_match");
 
                 JOptionPane.showMessageDialog(this,
-                        "Maçı terk ettiniz");
+                        "You left the game");
 
-                jLabel9.setText("Maçı terk ettiniz");
-                restartGame();
+                jLabel9.setText("You left the game");
+                try {
+                    restartGame();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Game.class
+                            .getName()).log(Level.SEVERE, null, ex);
+                }
 
             }
         } else if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
             mesajlas("quit_for_search");
-            jLabel8.setText("Stopped searching match");
-            findAMatch.setText("Find a Match");
+            jLabel8.setText("Stopped searching game");
+            findAMatch.setText("Find a Game");
             findAMatch.getAccessibleContext().setAccessibleDescription("arama");
             connectServer.setEnabled(true);
         }
@@ -522,7 +569,7 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     //<editor-fold defaultstate="collapsed" desc="rastgele zar atar">
-    public void zarlariAt(int player) {
+    public void zarlariAt(int player) throws InterruptedException {
 
         if (tur < 3) {
             tur++;
@@ -567,10 +614,12 @@ public class Game extends javax.swing.JFrame {
                     }
                     i++;
                     if (i >= 10) {
-
+                       
                         timer.cancel();
                         if (player == 1) {
+
                             mesajlas("GelenZarlar[" + gelenZarlar() + "]");
+                           
                             Calculate(player);
                             if (tur >= 3) {
                                 jLabel7.setText("Tur sayısı bitti");
@@ -580,7 +629,7 @@ public class Game extends javax.swing.JFrame {
                                     sonKarar = true;
                                     for (Component img : zarlar) {
 
-                                        img.setLocation(img.getLocation().x, 30);
+                                        img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName().split("-")[1]), 30);
                                         img.removeMouseListener(oyuncuZarMouse);
                                         img.removeMouseListener(ortaZarMouse);
 
@@ -599,14 +648,17 @@ public class Game extends javax.swing.JFrame {
                                         }
                                     }
                                 }
+
                             }
+
                         } else if (player == 2) {
+                           
                             if (tur >= 3) {
                                 sonKarar = false;
                                 jLabel7.setText("Tur sayısı bitti");
                                 for (Component img : zarlar) {
 
-                                    img.setLocation(img.getLocation().x, 30);
+                                    img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName().split("-")[1]), 30);
                                     img.removeMouseListener(oyuncuZarMouse);
                                     img.removeMouseListener(ortaZarMouse);
 
@@ -622,18 +674,28 @@ public class Game extends javax.swing.JFrame {
                                         gelenler.removeMouseListener(oyuncuZarMouse);
                                     }
                                 }
+
                             }
+
+                        }
+                        try {
+                            zarKalibresi();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 }
             }, delay, period);
+
         }
+
     }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="aldığı parametreye göre rakibin zarlarını al ver yapar">
-    void zarIsleri(String s) {
+    void zarIsleri(String s) throws InterruptedException {
         if ((s != null)) {
+
             // 1-1 -> zar sırası - 1-zarı al/2-zarı geri at/3-roll
             JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
 
@@ -644,7 +706,7 @@ public class Game extends javax.swing.JFrame {
 
             switch (komut) {
                 case 1://rakip
-                    zar.setLocation(zar.getLocation().x, 31);
+                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[1]), 31);
                     zar.removeMouseListener(oyuncuZarMouse);
                     zar.removeMouseListener(ortaZarMouse);
                     orta.remove(zar);
@@ -652,7 +714,7 @@ public class Game extends javax.swing.JFrame {
                     refresh();
                     break;
                 case 2://orta
-                    zar.setLocation(zar.getLocation().x, 30);
+                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
                     zar.removeMouseListener(ortaZarMouse);
                     zar.removeMouseListener(oyuncuZarMouse);
                     if (turn) {
@@ -670,6 +732,7 @@ public class Game extends javax.swing.JFrame {
             }
 
         }
+
     }
 //</editor-fold>
 
@@ -692,7 +755,9 @@ public class Game extends javax.swing.JFrame {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
+
                 oyuncuZarClicked(evt);
+
             }
         }
     };
@@ -701,7 +766,9 @@ public class Game extends javax.swing.JFrame {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
+
                 ortaZarClicked(evt);
+
             }
         }
     };
@@ -709,7 +776,7 @@ public class Game extends javax.swing.JFrame {
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
         Component zar = evt.getComponent();
 
-        zar.setLocation(zar.getLocation().x, 31);
+        zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[1]), 31);
 
         zar.removeMouseListener(oyuncuZarMouse);
         zar.removeMouseListener(ortaZarMouse);
@@ -718,7 +785,7 @@ public class Game extends javax.swing.JFrame {
 
         orta.remove(evt.getComponent());
         oyuncu.add(zar);
-        mesajlas("ZarAl[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
+        mesajlas("ZarAl[" + zar.getName().substring(3) + "]");
 
         int k = 0;
         for (Component gelenler : oyuncu.getComponents()) {
@@ -737,7 +804,8 @@ public class Game extends javax.swing.JFrame {
 
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
         Component zar = evt.getComponent();
-        zar.setLocation(zar.getLocation().x, 30);
+
+        zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
 
         zar.removeMouseListener(ortaZarMouse);
         zar.removeMouseListener(oyuncuZarMouse);
@@ -759,7 +827,7 @@ public class Game extends javax.swing.JFrame {
             sonKarar = false;
         }
 
-        mesajlas("ZarVer[" + zar.getAccessibleContext().getAccessibleName().substring(3) + "]");
+        mesajlas("ZarVer[" + zar.getName().substring(3) + "]");
         refresh();
     }
 
@@ -777,6 +845,7 @@ public class Game extends javax.swing.JFrame {
 
     //<editor-fold defaultstate="collapsed" desc="zarları, aldığı parametreye göre düzenler">
     public void zarlariDuzenle(String zarlar) throws InterruptedException {
+
         String[] dice = new String[]{"", "one", "two", "three", "four", "five", "six"};
         String[] zarDuzeni = zarlar.split("\\,", -1);
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -796,7 +865,7 @@ public class Game extends javax.swing.JFrame {
             images[i - 1].getAccessibleContext().setAccessibleDescription("" + k);
 
         }
-        Thread.sleep(500);
+        Thread.sleep(100);
         for (int i = 1; i <= 5; i++) {
             if (Integer.parseInt(zarDuzeni[i - 1]) != Integer.parseInt(images[i - 1].getAccessibleContext().getAccessibleDescription())) {
                 System.out.println("Hatali zar düzeni tespiti");
@@ -806,6 +875,9 @@ public class Game extends javax.swing.JFrame {
         }
         refresh();
         Calculate(2);
+
+        zarKalibresi();
+
     }
 //</editor-fold>
 
@@ -1000,7 +1072,7 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="maçı bitir">
-    public void finishMatch() {
+    public void finishMatch() throws InterruptedException {
 
         if (oyunTur != -1) {
             mesajlas("macBitir");
@@ -1008,8 +1080,8 @@ public class Game extends javax.swing.JFrame {
         int playerScore = Integer.parseInt(gameCard.getValueAt(21, 1).toString());
         int rivalScore = Integer.parseInt(gameCard.getValueAt(21, 2).toString());
 
-        String mesaj = (playerScore < rivalScore) ? "rakip kazandı" : "sen kazandın";
-        jLabel9.setText("Match is over: " + mesaj);
+        String mesaj = (playerScore < rivalScore) ? "rival won" : "you won";
+        jLabel9.setText("Game is over: " + mesaj);
         JOptionPane.showMessageDialog(this,
                 mesaj);
 
@@ -1019,7 +1091,7 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="oyunu başlat">
-    public void start(boolean first, String rivalName) {
+    public void start(boolean first, String rivalName) throws InterruptedException {
 
         if (first) {
             zarAt.setEnabled(true);
@@ -1028,20 +1100,22 @@ public class Game extends javax.swing.JFrame {
 
         } else {
             zarAt.setEnabled(false);
-            jLabel9.setText("Waiting for enemy's move");
+            jLabel9.setText("Waiting for rival's move");
             turn = false;
 
             restartDice();
         }
-        findAMatch.setText("Maçı bırak...");
+
+        findAMatch.setText("Leave game");
         sonKarar = false;
-        jLabel8.setText("Started a Match"); 
+        jLabel8.setText("Started a Game");
         changeTableHeader(rivalName, 2);
     }
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="gui tazeleme">
     void refresh() {
+
         orta.repaint();
         oyuncu.repaint();
         rakip.repaint();
@@ -1081,10 +1155,10 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="maç terk edildiğinde">
-    public void quittedMatch() {
+    public void quittedMatch() throws InterruptedException {
         JOptionPane.showMessageDialog(this,
-                "Rakip maçı terketti");
-        jLabel9.setText("Rakip, maçı terketti");
+                "Rival left the game");
+        jLabel9.setText("Rival left the game");
 
         restartGame();
 
@@ -1092,7 +1166,7 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama">
-    public void restartGame() {
+    public void restartGame() throws InterruptedException {
         changeTableHeader("Rival", 2);
         enemy = -2;
         macDurumu = false;
@@ -1101,7 +1175,7 @@ public class Game extends javax.swing.JFrame {
         connectServer.setEnabled(true);
         findAMatch.setEnabled(true);
         findAMatch.getAccessibleContext().setAccessibleDescription("arama");
-        findAMatch.setText("Find a Match");
+        findAMatch.setText("Find a Game");
 
         jLabel7.setText("");
         jLabel8.setText("");
@@ -1120,21 +1194,26 @@ public class Game extends javax.swing.JFrame {
 //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="zarları ilk yerlerine koyma">
-    public void restartDice() {
-        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+    public void restartDice() throws InterruptedException {
 
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+        int x = 140;
         for (JLabel zar : images) {
 
-            zar.setLocation(zar.getLocation().x, 30);
+            zar.setLocation(x, 30);
+            zar.getAccessibleContext().setAccessibleName(zar.getLocation().x + "-" + x);
             zar.removeMouseListener(oyuncuZarMouse);
             zar.removeMouseListener(ortaZarMouse);
 
             rakip.remove(zar);
             oyuncu.remove(zar);
             orta.add(zar);
+            x += 60;
 
         }
+
         refresh();
+        zarSirala();
     }
 //</editor-fold>
 
@@ -1158,12 +1237,103 @@ public class Game extends javax.swing.JFrame {
         try {
             Thread.sleep(20);
         } catch (InterruptedException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Game.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
         gameCard.getTableHeader().repaint();
         gameCard.repaint();
     }
 //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="zarları küçükten büyüğe sıralamaya yardımcı olur">
+    ArrayList<Zar> zarlar = new ArrayList<>();
+
+    public void zarSirala() {
+
+        zarlar = new ArrayList<>();
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+
+        for (int i = 0; i < 5; i++) {
+            int zarNo = Integer.parseInt(images[i].getAccessibleContext().getAccessibleDescription());
+            Zar zar = new Zar(zarNo, images[i]);
+            zarlar.add(zar);
+        }
+
+        Collections.sort(zarlar);
+
+        int x = 140;
+        for (Zar zar : zarlar) {
+            for (int i = 0; i < 5; i++) {
+                if (images[i].equals(zar.zarComp)) {
+                    //
+                    images[i].getAccessibleContext().setAccessibleName(images[i].getLocation().x + "-" + x);
+                    x += 60;
+
+                }
+            }
+        }
+
+    }
+
+    public class Zar implements Comparable {
+
+        public int zar;
+        public JLabel zarComp;
+
+        public Zar(int zar, JLabel zarComp) {
+            this.zar = zar;
+            this.zarComp = zarComp;
+        }
+
+        public int getZar() {
+            return zar;
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            int comp = ((Zar) o).getZar();
+            return this.zar - comp;
+        }
+
+    }
+
+    public void zarKalibresi() throws InterruptedException {
+        //orta panelde sadece alabileceği yeni x kordinatları girsin
+        //rakip ya da oyuncu panelde hem yeni x koordinatları girilsin hemde setlocation fonk. olsun
+
+        zarSirala();
+        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
+
+        for (Zar zar : zarlar) {
+            for (int i = 0; i < 5; i++) {
+                if (images[i].equals(zar.zarComp)) {
+
+                    for (Component gelenler : oyuncu.getComponents()) {
+                        if (gelenler instanceof JLabel) {
+                            if (gelenler.equals(images[i])) {
+                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+
+                            }
+                        }
+                    }
+
+                    for (Component gelenler : rakip.getComponents()) {
+                        if (gelenler instanceof JLabel) {
+                            if (gelenler.equals(images[i])) {
+                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        Thread.sleep(10);
+        refresh();
+
+    }
+    //</editor-fold>
 
     /**
      * @param args the command line arguments
@@ -1182,13 +1352,17 @@ public class Game extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

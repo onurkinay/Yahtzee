@@ -13,6 +13,7 @@ import javax.swing.DefaultListModel;
  * @author k-sam
  */
 public class FrmServer extends javax.swing.JFrame {
+
     public static Server myserver;
     public static ArrayList<Match> maclar = new ArrayList<>();
     public static DefaultListModel clientMessagesModel;
@@ -24,12 +25,13 @@ public class FrmServer extends javax.swing.JFrame {
     public FrmServer() {
         initComponents();
         this.myserver = new Server(5000);
-        clientMessagesModel= new DefaultListModel();
+        clientMessagesModel = new DefaultListModel();
         lst_clientMessages.setModel(clientMessagesModel);
-        clientsConnectedModel= new DefaultListModel();
+        clientsConnectedModel = new DefaultListModel();
         lst_clientsConnected.setModel(clientsConnectedModel);
-      
-                
+
+        setTitle("Yahtzee Server");
+        setResizable(false);
     }
 
     /**
@@ -106,7 +108,7 @@ public class FrmServer extends javax.swing.JFrame {
 
     private void btn_sendSelectedClientMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendSelectedClientMessageActionPerformed
         // TODO add your handling code here:
-        this.myserver.SendSelectedClientMessage(txta_message.getText(),Integer.parseInt(lst_clientsConnected.getSelectedValue()));
+        this.myserver.SendSelectedClientMessage(txta_message.getText(), Integer.parseInt(lst_clientsConnected.getSelectedValue()));
     }//GEN-LAST:event_btn_sendSelectedClientMessageActionPerformed
 
     private void btn_sendBroadcast1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendBroadcast1ActionPerformed
