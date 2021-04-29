@@ -329,7 +329,7 @@ public class Game extends javax.swing.JFrame {
                                 }
                                 for (Component zar : oyuncu.getComponents()) {
 
-                                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
+                                    zar.setLocation(ilkYer((JLabel)zar), 30);
                                     zar.removeMouseListener(ortaZarMouse);
                                     zar.removeMouseListener(oyuncuZarMouse);
 
@@ -629,7 +629,7 @@ public class Game extends javax.swing.JFrame {
                                     sonKarar = true;
                                     for (Component img : zarlar) {
 
-                                        img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName().split("-")[1]), 30);
+                                        img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName()), 30);
                                         img.removeMouseListener(oyuncuZarMouse);
                                         img.removeMouseListener(ortaZarMouse);
 
@@ -658,7 +658,7 @@ public class Game extends javax.swing.JFrame {
                                 jLabel7.setText("Tur sayısı bitti");
                                 for (Component img : zarlar) {
 
-                                    img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName().split("-")[1]), 30);
+                                    img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName()), 30);
                                     img.removeMouseListener(oyuncuZarMouse);
                                     img.removeMouseListener(ortaZarMouse);
 
@@ -706,7 +706,7 @@ public class Game extends javax.swing.JFrame {
 
             switch (komut) {
                 case 1://rakip
-                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName()), 31);
                     zar.removeMouseListener(oyuncuZarMouse);
                     zar.removeMouseListener(ortaZarMouse);
                     orta.remove(zar);
@@ -714,7 +714,7 @@ public class Game extends javax.swing.JFrame {
                     refresh();
                     break;
                 case 2://orta
-                    zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
+                    zar.setLocation(ilkYer((JLabel)zar), 30);
                     zar.removeMouseListener(ortaZarMouse);
                     zar.removeMouseListener(oyuncuZarMouse);
                     if (turn) {
@@ -776,7 +776,7 @@ public class Game extends javax.swing.JFrame {
     private void ortaZarClicked(java.awt.event.MouseEvent evt) {
         Component zar = evt.getComponent();
 
-        zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+        zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName()), 31);
 
         zar.removeMouseListener(oyuncuZarMouse);
         zar.removeMouseListener(ortaZarMouse);
@@ -805,7 +805,7 @@ public class Game extends javax.swing.JFrame {
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
         Component zar = evt.getComponent();
 
-        zar.setLocation(Integer.parseInt(zar.getAccessibleContext().getAccessibleName().split("-")[0]), 30);
+        zar.setLocation(ilkYer((JLabel)zar), 30);
 
         zar.removeMouseListener(ortaZarMouse);
         zar.removeMouseListener(oyuncuZarMouse);
@@ -1266,13 +1266,17 @@ public class Game extends javax.swing.JFrame {
             for (int i = 0; i < 5; i++) {
                 if (images[i].equals(zar.zarComp)) {
                     //
-                    images[i].getAccessibleContext().setAccessibleName(images[i].getLocation().x + "-" + x);
+                    images[i].getAccessibleContext().setAccessibleName(""+x);
                     x += 60;
 
                 }
             }
         }
 
+    }
+    
+    public int ilkYer(JLabel zar){
+        return 140 + ( (Integer.parseInt(zar.getName().substring(3))-1)*60 );
     }
 
     public class Zar implements Comparable {
@@ -1311,7 +1315,7 @@ public class Game extends javax.swing.JFrame {
                     for (Component gelenler : oyuncu.getComponents()) {
                         if (gelenler instanceof JLabel) {
                             if (gelenler.equals(images[i])) {
-                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName()), 31);
 
                             }
                         }
@@ -1320,7 +1324,7 @@ public class Game extends javax.swing.JFrame {
                     for (Component gelenler : rakip.getComponents()) {
                         if (gelenler instanceof JLabel) {
                             if (gelenler.equals(images[i])) {
-                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName().split("-")[1]), 31);
+                                images[i].setLocation(Integer.parseInt(images[i].getAccessibleContext().getAccessibleName()), 31);
 
                             }
                         }
