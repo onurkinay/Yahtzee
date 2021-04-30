@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.onurkinay</groupId>
     <artifactId>Yahtzee</artifactId>
-    <version>1.1-beta</version>
+    <version>1.2-release</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -63,4 +63,6 @@
             
         </plugins>
     </build>
+    <name>Yahtzee Game</name>
+    <description>Developed by Onur Kınay for Networking Project</description>
 </project>
