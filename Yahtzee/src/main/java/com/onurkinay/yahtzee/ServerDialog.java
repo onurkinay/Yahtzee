@@ -44,9 +44,9 @@ public class ServerDialog extends JDialog implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(null);
 
-        JLabel serverLabel = new JLabel("Server giriniz:");
+        JLabel serverLabel = new JLabel("Enter server:");
         serverIP = new JTextField(15);
-        resmiKullan = new JCheckBox("Resmi Sunucu Kullan");
+        resmiKullan = new JCheckBox("Use offical servers");
         btnOk = new JButton("Ok");
         btnCancel = new JButton("Cancel");
         resmi = new JComboBox<String>(resmiServerlar);

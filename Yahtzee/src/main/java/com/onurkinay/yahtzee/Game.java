@@ -11,7 +11,7 @@ package com.onurkinay.yahtzee;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -82,14 +82,6 @@ public class Game extends javax.swing.JFrame {
         setResizable(false);
         //<editor-fold defaultstate="collapsed" desc="design'de yapılabilir">
 
-        JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
-        int x = 140;
-
-        for (int i = 0; i < 5; i++) {
-
-            images[i].getAccessibleContext().setAccessibleName(images[i].getLocation().x + "-" + x);
-            x += 60;
-        }
 //</editor-fold>
     }
 
@@ -203,7 +195,7 @@ public class Game extends javax.swing.JFrame {
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel2);
         jLabel2.setBounds(140, 30, 50, 50);
-        jLabel2.getAccessibleContext().setAccessibleName("zar1");
+        jLabel2.getAccessibleContext().setAccessibleName("140");
         jLabel2.getAccessibleContext().setAccessibleDescription("");
 
         jLabel3.setText("ss");
@@ -213,7 +205,7 @@ public class Game extends javax.swing.JFrame {
         jLabel3.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel3);
         jLabel3.setBounds(200, 30, 50, 50);
-        jLabel3.getAccessibleContext().setAccessibleName("zar2");
+        jLabel3.getAccessibleContext().setAccessibleName("200");
 
         jLabel4.setText("ss");
         jLabel4.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -222,7 +214,7 @@ public class Game extends javax.swing.JFrame {
         jLabel4.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel4);
         jLabel4.setBounds(260, 30, 50, 50);
-        jLabel4.getAccessibleContext().setAccessibleName("zar3");
+        jLabel4.getAccessibleContext().setAccessibleName("260");
 
         jLabel5.setText("ss");
         jLabel5.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -231,7 +223,7 @@ public class Game extends javax.swing.JFrame {
         jLabel5.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel5);
         jLabel5.setBounds(320, 30, 50, 50);
-        jLabel5.getAccessibleContext().setAccessibleName("zar4");
+        jLabel5.getAccessibleContext().setAccessibleName("320");
 
         jLabel6.setText("ss");
         jLabel6.setMaximumSize(new java.awt.Dimension(50, 50));
@@ -240,7 +232,7 @@ public class Game extends javax.swing.JFrame {
         jLabel6.setPreferredSize(new java.awt.Dimension(50, 50));
         orta.add(jLabel6);
         jLabel6.setBounds(380, 30, 50, 50);
-        jLabel6.getAccessibleContext().setAccessibleName("zar5");
+        jLabel6.getAccessibleContext().setAccessibleName("380");
 
         getContentPane().add(orta, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 600, 120));
 
@@ -297,8 +289,7 @@ public class Game extends javax.swing.JFrame {
                         jLabel1.setText("Cannot be selected");
                         secilen = -1;
                     } else {
-                        // jLabel1.setText("" + jTable1.getValueAt(row, 0).toString() + " of Player #" + col);
-                        //jLabel1.setText("" + gameCard.getValueAt(row, 0).toString() + " seçildi"); 
+
                         if (sonKarar) {
                             secilen = row;
                             if (secilen != -1) {
@@ -318,10 +309,10 @@ public class Game extends javax.swing.JFrame {
                                                 null,
                                                 options,
                                                 options[1]);
-                                        if (n == 1) {
-                                            return;
-                                        } else {
+                                        if (n == 0) {
                                             gameCard.setValueAt("*0", secilen, 1);
+                                        } else {
+                                            return;
                                         }
                                     }
                                 } else {
@@ -331,7 +322,7 @@ public class Game extends javax.swing.JFrame {
                                 }
                                 for (Component zar : oyuncu.getComponents()) {
 
-                                    zar.setLocation(ilkYer((JLabel)zar), 30);
+                                    zar.setLocation(ilkYer((JLabel) zar), 30);
                                     zar.removeMouseListener(ortaZarMouse);
                                     zar.removeMouseListener(oyuncuZarMouse);
 
@@ -415,7 +406,7 @@ public class Game extends javax.swing.JFrame {
 
     private void connectServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerActionPerformed
         // TODO add your handling code here: 
-        if ("disconnect".equals(connectServer.getAccessibleContext().getAccessibleDescription())) {
+        if ("disconnect".equals(connectServer.getAccessibleContext().getAccessibleDescription())) {//dissconnect
             myClient.Close();
             myClient = null;
             this.setTitle("No connection... " + title);
@@ -445,28 +436,29 @@ public class Game extends javax.swing.JFrame {
                             "Connection error. Be sure if correct server to connect");
                     myClient = null;
                 } else {
+                    while (true) {//nickname girişi yapılıncaya kadar 
+                        nickName = (String) JOptionPane.showInputDialog(//nickname giriniz
+                                this,
+                                "Before starting game, enter a nickname:\n",
+                                "Nickname",
+                                JOptionPane.PLAIN_MESSAGE,
+                                null,
+                                null,
+                                nickName);
 
-                    nickName = (String) JOptionPane.showInputDialog(
-                            this,
-                            "Before starting game, enter a nickname:\n",
-                            "Nickname",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            null,
-                            nickName);
+                        if ((nickName != null) && (nickName.length() > 0)) {
+                            myClient.Start();//nickname girildiğinde sisteme bağlansın
+                            changeTableHeader(nickName, 1);
+                            mesajlas("register_me<" + nickName + ">");
+                            connectServer.setText("Disconnect Server");
+                            connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
+                            this.setTitle("Connected Server: " + ip + " - " + title);
+                            findAMatch.setEnabled(true);
+                            findAMatch.getAccessibleContext().setAccessibleDescription("arama");
+                            jLabel8.setText("Connected server.");
 
-                    myClient.Start();
-                    if ((nickName != null) && (nickName.length() > 0)) {
-                        changeTableHeader(nickName, 1);
-                        mesajlas("register_me<"+nickName+">");
-                        connectServer.setText("Disconnect Server");
-                        connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
-                        this.setTitle("Connected Server: " + ip + " - " + title);
-                        findAMatch.setEnabled(true);
-                        findAMatch.getAccessibleContext().setAccessibleDescription("arama");
-                        jLabel8.setText("Connected server.");
-
-                        return;
+                            return;
+                        }
                     }
                 }
             }
@@ -479,6 +471,8 @@ public class Game extends javax.swing.JFrame {
 
     public int rollOverRowIndex = -1;
     public int rollOverColIndex = -1;
+
+    //gameCard hover
     private void gameCardMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gameCardMouseMoved
         int row = gameCard.rowAtPoint(evt.getPoint());
         int col = gameCard.columnAtPoint(evt.getPoint());
@@ -515,7 +509,7 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_gameCardMouseExited
 
     private void findAMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findAMatchActionPerformed
-        if ("arama".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
+        if ("arama".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {//maç arama 
 
             mesajlas("match_me<" + nickName + ">");
             jLabel8.setText("Created a game and waiting a rival");
@@ -524,7 +518,7 @@ public class Game extends javax.swing.JFrame {
             findAMatch.getAccessibleContext().setAccessibleDescription("aramaBirak");
             connectServer.setEnabled(false);
 
-        } else if ("terket".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
+        } else if ("terket".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {//maçı terk etme isteği
             //Custom button text
             Object[] options = {"Yes",
                 "No"};
@@ -551,7 +545,7 @@ public class Game extends javax.swing.JFrame {
                 }
 
             }
-        } else if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {
+        } else if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {//aramayı terk etme
             mesajlas("quit_for_search");
             jLabel8.setText("Stopped searching game");
             findAMatch.setText("Find a Game");
@@ -562,6 +556,7 @@ public class Game extends javax.swing.JFrame {
     }//GEN-LAST:event_findAMatchActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        //ekran kapatıldığında sunucuya çıktığını bildirme
         if ("aramaBirak".equals(findAMatch.getAccessibleContext().getAccessibleDescription())) {//finding match mode
             mesajlas("quit_for_search");
             System.out.println("arama terk edildi");
@@ -617,12 +612,12 @@ public class Game extends javax.swing.JFrame {
                     }
                     i++;
                     if (i >= 10) {
-                       
+
                         timer.cancel();
                         if (player == 1) {
 
                             mesajlas("GelenZarlar[" + gelenZarlar() + "]");
-                           
+
                             Calculate(player);
                             if (tur >= 3) {
                                 jLabel7.setText("Tur sayısı bitti");
@@ -655,7 +650,7 @@ public class Game extends javax.swing.JFrame {
                             }
 
                         } else if (player == 2) {
-                           
+
                             if (tur >= 3) {
                                 sonKarar = false;
                                 jLabel7.setText("Tur sayısı bitti");
@@ -717,7 +712,7 @@ public class Game extends javax.swing.JFrame {
                     refresh();
                     break;
                 case 2://orta
-                    zar.setLocation(ilkYer((JLabel)zar), 30);
+                    zar.setLocation(ilkYer((JLabel) zar), 30);
                     zar.removeMouseListener(ortaZarMouse);
                     zar.removeMouseListener(oyuncuZarMouse);
                     if (turn) {
@@ -742,7 +737,7 @@ public class Game extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="rakipler arası iletişim">
     void mesajlas(String mesaj) {
         if (myClient != null && myClient.isConnected) {
-            if (mesaj.equals("match_me") || mesaj.equals("quit_for_search")) {
+            if (mesaj.equals("match_me") || mesaj.equals("quit_for_search") || mesaj.equals("register_me")) {
                 myClient.SendMessage(mesaj);
             } else {
                 myClient.SendMessage("{" + enemy + "}" + "#" + mesaj);
@@ -758,9 +753,7 @@ public class Game extends javax.swing.JFrame {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
-
                 oyuncuZarClicked(evt);
-
             }
         }
     };
@@ -769,9 +762,7 @@ public class Game extends javax.swing.JFrame {
         @Override
         public void mouseClicked(java.awt.event.MouseEvent evt) {
             if (enemy != -2 && macDurumu && zarAt.isEnabled() && tur != 0) {
-
                 ortaZarClicked(evt);
-
             }
         }
     };
@@ -808,7 +799,7 @@ public class Game extends javax.swing.JFrame {
     private void oyuncuZarClicked(java.awt.event.MouseEvent evt) {
         Component zar = evt.getComponent();
 
-        zar.setLocation(ilkYer((JLabel)zar), 30);
+        zar.setLocation(ilkYer((JLabel) zar), 30);
 
         zar.removeMouseListener(ortaZarMouse);
         zar.removeMouseListener(oyuncuZarMouse);
@@ -1100,12 +1091,12 @@ public class Game extends javax.swing.JFrame {
             zarAt.setEnabled(true);
             jLabel9.setText("Your turn!");
             turn = true;
-
+            oyunTur = -1;
         } else {
             zarAt.setEnabled(false);
             jLabel9.setText("Waiting for rival's move");
             turn = false;
-
+            oyunTur = 0;
             restartDice();
         }
 
@@ -1140,7 +1131,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="seçilmemiş puan satırları silme">
+    //<editor-fold defaultstate="collapsed" desc="seçilmemiş kategorinin puanları temizleme">
     public void tabloTemizle() {
         for (int i = 1; i <= 2; i++) {
 
@@ -1157,8 +1148,8 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="maç terk edildiğinde">
-    public void quittedMatch() throws InterruptedException {
+    //<editor-fold defaultstate="collapsed" desc="rakip maçı terk ettiğinde">
+    public void rivalQuitMatch() throws InterruptedException {
         JOptionPane.showMessageDialog(this,
                 "Rival left the game");
         jLabel9.setText("Rival left the game");
@@ -1168,7 +1159,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama">
+    //<editor-fold defaultstate="collapsed" desc="oyunu sıfırlama ve yeni maça hazırlama">
     public void restartGame() throws InterruptedException {
         changeTableHeader("Rival", 2);
         enemy = -2;
@@ -1178,7 +1169,7 @@ public class Game extends javax.swing.JFrame {
         connectServer.setEnabled(true);
         findAMatch.setEnabled(true);
         findAMatch.getAccessibleContext().setAccessibleDescription("arama");
-        findAMatch.setText("Find a Game");
+        findAMatch.setText("New Game");
 
         jLabel7.setText("");
         jLabel8.setText("");
@@ -1196,7 +1187,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="zarları ilk yerlerine koyma">
+    //<editor-fold defaultstate="collapsed" desc="zarları ortaya koyma">
     public void restartDice() throws InterruptedException {
 
         JLabel[] images = new JLabel[]{jLabel2, jLabel3, jLabel4, jLabel5, jLabel6};
@@ -1220,7 +1211,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="seçilebilecek puan var mı yok mu">
+    //<editor-fold defaultstate="collapsed" desc="seçilebilecek kategori var mı yok mu">
     public boolean canSelectScore() {
         for (int j = 0; j < 20; j++) {
             if (j == 7 || j == 8 || j == 17 || j == 19) {
@@ -1234,7 +1225,7 @@ public class Game extends javax.swing.JFrame {
     }
 //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc="tablo header değiştirme">
+    //<editor-fold defaultstate="collapsed" desc="tablo başlığı değiştirme">
     public void changeTableHeader(String name, int col) {
         gameCard.getColumnModel().getColumn(col).setHeaderValue(name);
         try {
@@ -1269,7 +1260,7 @@ public class Game extends javax.swing.JFrame {
             for (int i = 0; i < 5; i++) {
                 if (images[i].equals(zar.zarComp)) {
                     //
-                    images[i].getAccessibleContext().setAccessibleName(""+x);
+                    images[i].getAccessibleContext().setAccessibleName("" + x);
                     x += 60;
 
                 }
@@ -1277,9 +1268,9 @@ public class Game extends javax.swing.JFrame {
         }
 
     }
-    
-    public int ilkYer(JLabel zar){
-        return 140 + ( (Integer.parseInt(zar.getName().substring(3))-1)*60 );
+
+    public int ilkYer(JLabel zar) {
+        return 140 + ((Integer.parseInt(zar.getName().substring(3)) - 1) * 60);
     }
 
     public class Zar implements Comparable {
@@ -1341,6 +1332,26 @@ public class Game extends javax.swing.JFrame {
 
     }
     //</editor-fold>
+
+    public void closedServer() throws InterruptedException {
+        JOptionPane.showMessageDialog(this,
+                "Server is closed");
+        
+        restartGame();
+        
+        myClient.Close();
+        myClient = null;
+        this.setTitle("No connection... " + title);
+
+        findAMatch.setEnabled(false);
+
+        connectServer.setText("Connect Server");
+        connectServer.getAccessibleContext().setAccessibleDescription("connect");
+        sunucuVarmi = false;
+
+        jLabel8.setText("Disconnected from server.");
+        return;
+    }
 
     /**
      * @param args the command line arguments

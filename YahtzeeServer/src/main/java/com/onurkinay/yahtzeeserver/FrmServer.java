@@ -49,12 +49,8 @@ public class FrmServer extends javax.swing.JFrame {
         btn_start = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lst_clientMessages = new javax.swing.JList<>();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txta_message = new javax.swing.JTextArea();
-        btn_sendSelectedClientMessage = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         lst_clientsConnected = new javax.swing.JList<>();
-        btn_sendBroadcast1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -76,31 +72,9 @@ public class FrmServer extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 290, 360));
 
-        txta_message.setColumns(20);
-        txta_message.setRows(5);
-        jScrollPane2.setViewportView(txta_message);
-
-        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 120));
-
-        btn_sendSelectedClientMessage.setText("Sent Message Selected");
-        btn_sendSelectedClientMessage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_sendSelectedClientMessageActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btn_sendSelectedClientMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 140, 30));
-
         jScrollPane3.setViewportView(lst_clientsConnected);
 
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 180, 120));
-
-        btn_sendBroadcast1.setText("Broadcast Message");
-        btn_sendBroadcast1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_sendBroadcast1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btn_sendBroadcast1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 140, 30));
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 330));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -114,6 +88,7 @@ public class FrmServer extends javax.swing.JFrame {
             btn_start.setText("Stop");
         } else {
             try {
+                myserver.SendBroadcastMessage("server-is-closed");
                 myserver.socket.close();
                 myserver.socket = null;
             } catch (IOException ex) {
@@ -121,20 +96,11 @@ public class FrmServer extends javax.swing.JFrame {
             }
             this.myserver = null;
             setTitle("SERVER IS STOPPED - Yahtzee");
+            
             btn_start.setText("Start");
         }
         //stop code
     }//GEN-LAST:event_btn_startActionPerformed
-
-    private void btn_sendSelectedClientMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendSelectedClientMessageActionPerformed
-        // TODO add your handling code here:
-        this.myserver.SendSelectedClientMessage(txta_message.getText(), Integer.parseInt(lst_clientsConnected.getSelectedValue()));
-    }//GEN-LAST:event_btn_sendSelectedClientMessageActionPerformed
-
-    private void btn_sendBroadcast1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendBroadcast1ActionPerformed
-        // TODO add your handling code here:
-        this.myserver.SendBroadcastMessage(txta_message.getText());
-    }//GEN-LAST:event_btn_sendBroadcast1ActionPerformed
 
     private void lst_clientMessagesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lst_clientMessagesMouseClicked
        
@@ -176,14 +142,10 @@ public class FrmServer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_sendBroadcast1;
-    private javax.swing.JButton btn_sendSelectedClientMessage;
     private javax.swing.JButton btn_start;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> lst_clientMessages;
     private javax.swing.JList<String> lst_clientsConnected;
-    private javax.swing.JTextArea txta_message;
     // End of variables declaration//GEN-END:variables
 }
