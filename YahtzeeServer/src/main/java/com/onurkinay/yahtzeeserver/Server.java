@@ -53,6 +53,7 @@ public class Server {
         for (SClient client : clients) {
             if (id == client.id) {
                 client.SendMessage(msg);
+              
                 break;
             }
         }
@@ -74,7 +75,7 @@ public class Server {
     public void UpdateClientList() {
         FrmServer.clientsConnectedModel.removeAllElements();
         for (SClient client : clients) {
-            FrmServer.clientsConnectedModel.addElement(client.id);
+            FrmServer.clientsConnectedModel.addElement(client.nickName);
         }
         
     }
@@ -83,6 +84,8 @@ public class Server {
     {
         FrmServer.clientMessagesModel.addElement(msg.toString());
     }
+    
+     
     
 }
 
@@ -107,7 +110,7 @@ class ListenThread extends Thread {
                 SClient nClient = new SClient(nSocket, this.server);
                 nClient.Listen();
                 this.server.clients.add(nClient);
-                FrmServer.clientsConnectedModel.addElement(Integer.toString(nClient.id));
+                FrmServer.clientsConnectedModel.addElement("ID: "+nClient.id+"("+nClient.nickName+")");
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }

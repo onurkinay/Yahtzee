@@ -17,6 +17,7 @@ public class Match {
     
     String player1Name = "";
     String player2Name = "";
+     
 
     public Match(int player1, String player1Name) {
         this.id = idK++;

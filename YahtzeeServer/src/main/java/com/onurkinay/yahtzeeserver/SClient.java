@@ -27,6 +27,7 @@ public class SClient {
     public ObjectInputStream cInput;
     public ClientListenThread listenThread;
     public boolean isConnected;
+    public String nickName = "";
 
     public SClient(Socket socket, Server server) {
         try {
@@ -36,6 +37,7 @@ public class SClient {
             this.socket = socket;
             this.cOutput = new ObjectOutputStream(this.socket.getOutputStream());
             this.cInput = new ObjectInputStream(this.socket.getInputStream());
+            this.nickName = "waiting a nickname";
 
             this.listenThread = new ClientListenThread(this);
             System.out.println("client connected");
@@ -96,14 +98,16 @@ class ClientListenThread extends Thread {
                 System.out.println(msg.toString());
                 //<editor-fold defaultstate="collapsed" desc="hareketler">
                 if (msg.toString().contains("match_me")) {
+
                     boolean bulundu = false;
                     String s = msg.toString();
                     String playerName = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
+                    this.client.nickName = playerName;
                     for (Match mac : FrmServer.maclar) {
                         if (mac.player2 == -1) {
                             mac.player2 = this.client.id;
                             mac.player2Name = playerName;
-                            FrmServer.clientMessagesModel.addElement("Match#" + mac.id + " Players: " + mac.player1 + " - " + mac.player2);
+                            FrmServer.clientMessagesModel.addElement("Match#" + mac.id + " Players: " + mac.player1Name + " <-> " + mac.player2Name);
 
                             this.client.SendMessage("foundPlayerF#" + mac.player1 + "#" + mac.player1Name);
                             FrmServer.myserver.SendSelectedClientMessage("foundPlayerT#" + mac.player2 + "#" + mac.player2Name, mac.player1);
@@ -117,6 +121,11 @@ class ClientListenThread extends Thread {
                         FrmServer.maclar.add(yeniMac);
                     }
 
+                } else if (msg.toString().contains("register_me")) {
+                    String s = msg.toString();
+                    String playerName = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
+                    this.client.nickName = playerName;
+                    FrmServer.myserver.UpdateClientList();
                 } else if (msg.toString().contains("quit_for_search")) {
                     Match silinecekMac = null;
                     for (Match mac : FrmServer.maclar) {
@@ -129,6 +138,7 @@ class ClientListenThread extends Thread {
                         }
                     }
                     FrmServer.maclar.remove(silinecekMac);
+
                 } else {
                     if (msg.toString().contains("e#zarAt")) {
 

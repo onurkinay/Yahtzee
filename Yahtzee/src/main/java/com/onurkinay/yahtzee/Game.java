@@ -2,14 +2,16 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+
+bağlandıktan sonra ekrana gelen nickname ekranı kapatılınca connect server ekranı gelmiyor
+port girilsin
  */
 package com.onurkinay.yahtzee;
 
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.ArrayList; 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -456,6 +458,7 @@ public class Game extends javax.swing.JFrame {
                     myClient.Start();
                     if ((nickName != null) && (nickName.length() > 0)) {
                         changeTableHeader(nickName, 1);
+                        mesajlas("register_me<"+nickName+">");
                         connectServer.setText("Disconnect Server");
                         connectServer.getAccessibleContext().setAccessibleDescription("disconnect");
                         this.setTitle("Connected Server: " + ip + " - " + title);

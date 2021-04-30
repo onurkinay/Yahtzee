@@ -5,8 +5,11 @@
  */
 package com.onurkinay.yahtzeeserver;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel; 
 
 /**
  *
@@ -24,7 +27,7 @@ public class FrmServer extends javax.swing.JFrame {
      */
     public FrmServer() {
         initComponents();
-        this.myserver = new Server(5000);
+        
         clientMessagesModel = new DefaultListModel();
         lst_clientMessages.setModel(clientMessagesModel);
         clientsConnectedModel = new DefaultListModel();
@@ -43,7 +46,6 @@ public class FrmServer extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txt_port = new javax.swing.JTextField();
         btn_start = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lst_clientMessages = new javax.swing.JList<>();
@@ -57,17 +59,19 @@ public class FrmServer extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txt_port.setText("5000");
-        getContentPane().add(txt_port, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 11, 60, -1));
-
         btn_start.setText("Start");
         btn_start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_startActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_start, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 10, 70, -1));
+        getContentPane().add(btn_start, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 180, -1));
 
+        lst_clientMessages.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lst_clientMessagesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(lst_clientMessages);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 290, 360));
@@ -103,7 +107,23 @@ public class FrmServer extends javax.swing.JFrame {
 
     private void btn_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startActionPerformed
         // TODO add your handling code here:
-        this.myserver.Listen();
+        if (btn_start.getText().equals("Start")) {
+            this.myserver = new Server(5000);
+            this.myserver.Listen();
+            setTitle("SERVER IS RUNNING - Yahtzee");
+            btn_start.setText("Stop");
+        } else {
+            try {
+                myserver.socket.close();
+                myserver.socket = null;
+            } catch (IOException ex) {
+                Logger.getLogger(FrmServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.myserver = null;
+            setTitle("SERVER IS STOPPED - Yahtzee");
+            btn_start.setText("Start");
+        }
+        //stop code
     }//GEN-LAST:event_btn_startActionPerformed
 
     private void btn_sendSelectedClientMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sendSelectedClientMessageActionPerformed
@@ -115,6 +135,10 @@ public class FrmServer extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.myserver.SendBroadcastMessage(txta_message.getText());
     }//GEN-LAST:event_btn_sendBroadcast1ActionPerformed
+
+    private void lst_clientMessagesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lst_clientMessagesMouseClicked
+       
+    }//GEN-LAST:event_lst_clientMessagesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -160,7 +184,6 @@ public class FrmServer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> lst_clientMessages;
     private javax.swing.JList<String> lst_clientsConnected;
-    private javax.swing.JTextField txt_port;
     private javax.swing.JTextArea txta_message;
     // End of variables declaration//GEN-END:variables
 }
