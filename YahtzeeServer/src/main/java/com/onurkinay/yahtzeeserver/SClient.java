@@ -96,14 +96,15 @@ class ClientListenThread extends Thread {
                 System.out.println("waiting message from client");
                 Object msg = this.client.cInput.readObject(); // blocking method | waiting message
                 System.out.println(msg.toString());
+                String s = msg.toString();
                 //<editor-fold defaultstate="collapsed" desc="hareketler">
                 if (msg.toString().contains("match_me")) {
 
                     boolean bulundu = false;
-                    String s = msg.toString();
+                  
                     String playerName = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
                     this.client.nickName = playerName;
-                    for (Match mac : FrmServer.maclar) {
+                    for (Match mac : FrmServer.maclar) {//oyuncu bekleyene eşleştirilir
                         if (mac.player2 == -1) {
                             mac.player2 = this.client.id;
                             mac.player2Name = playerName;
@@ -116,17 +117,17 @@ class ClientListenThread extends Thread {
                         }
                     }
 
-                    if (!bulundu) {
+                    if (!bulundu) {//rakip bulamayan oyuncu kendi maçını oluşturur
                         Match yeniMac = new Match(this.client.id, playerName);
                         FrmServer.maclar.add(yeniMac);
                     }
 
-                } else if (msg.toString().contains("register_me")) {
-                    String s = msg.toString();
+                } else if (msg.toString().contains("register_me")) {//nickname bildirme
+                     
                     String playerName = s.substring(s.indexOf("<") + 1, s.indexOf(">"));
                     this.client.nickName = playerName;
                     FrmServer.myserver.UpdateClientList();
-                } else if (msg.toString().contains("quit_for_search")) {
+                } else if (msg.toString().contains("quit_for_search")) {//oyuncu aramadan çıkarsa
                     Match silinecekMac = null;
                     for (Match mac : FrmServer.maclar) {
                         if (mac.player2 == -1) {
@@ -140,50 +141,50 @@ class ClientListenThread extends Thread {
                     FrmServer.maclar.remove(silinecekMac);
 
                 } else {
-                    if (msg.toString().contains("e#zarAt")) {
+                    if (msg.toString().contains("e#zarAt")) {//rakip zar atımı bildirilir
 
                         System.out.println("oyunculardan biri hareketini yaptı");
-                        String s = msg.toString();
+
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
                         FrmServer.myserver.SendSelectedClientMessage("e#ZarAt", pEnemy);
 
-                    } else if (msg.toString().contains("GelenZarlar")) {
+                    } else if (msg.toString().contains("GelenZarlar")) {//oyuncuya gelen zarlar rakibe bildirilir
 
                         System.out.println("oyunculardan biri hareketini yaptı");
-                        String s = msg.toString();
+                      
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                         FrmServer.myserver.SendSelectedClientMessage("DusmanZarlar[" + zarlar + "]", pEnemy);
 
-                    } else if (msg.toString().contains("ZarAl")) {
+                    } else if (msg.toString().contains("ZarAl")) {//zar alma işlemi oyuncuya bildirilir
 
                         System.out.println("oyunculardan biri zar aldı");
-                        String s = msg.toString();
+                      
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                         FrmServer.myserver.SendSelectedClientMessage("ZarAl[" + zar + "]", pEnemy);
 
-                    } else if (msg.toString().contains("ZarVer")) {
+                    } else if (msg.toString().contains("ZarVer")) {//zar verme işlemi oyuncuya bildirilir
 
                         System.out.println("oyunculardan biri zar verdi");
-                        String s = msg.toString();
+                       
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                         FrmServer.myserver.SendSelectedClientMessage("ZarVer[" + zar + "]", pEnemy);
 
-                    } else if (msg.toString().contains("yourTurn")) {
+                    } else if (msg.toString().contains("yourTurn")) {//sıra karşı tarafta
                         System.out.println("sıra baskasinda");
-                        String s = msg.toString();
+                        
                         String secilen = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("myturn[" + secilen + "]", pEnemy);
-                    } else if (msg.toString().contains("macBitir")) {
+                    } else if (msg.toString().contains("macBitir")) { //maç uygun şekilde bitilirse
                         System.out.println("mac bitti");
-                        String s = msg.toString();
+                       
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("macBitir", pEnemy);
@@ -198,9 +199,9 @@ class ClientListenThread extends Thread {
                         }
                         FrmServer.maclar.remove(silinecekMac);
 
-                    } else if (msg.toString().contains("quit_the_match")) {
+                    } else if (msg.toString().contains("quit_the_match")) { //maç erken sonlandırılırsa
                         System.out.println("mac erken bitti");
-                        String s = msg.toString();
+                      
                         int pEnemy = Integer.parseInt(s.substring(s.indexOf("{") + 1, s.indexOf("}")));
 
                         FrmServer.myserver.SendSelectedClientMessage("quit_the_match", pEnemy);

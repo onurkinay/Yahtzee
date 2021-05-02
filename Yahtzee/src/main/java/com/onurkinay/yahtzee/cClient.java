@@ -108,7 +108,7 @@ class ClientListenThread extends Thread {
                     }
                     main.panel.findAMatch.getAccessibleContext().setAccessibleDescription("terket");
                     main.panel.connectServer.setEnabled(false);
-                }else if(msg.toString().contains("server-is-closed")  ){
+                }else if(msg.toString().contains("server-is-closed")  ){//sunucu kendini kapatırsa
                         main.panel.closedServer();
                 }else if (msg.toString().contains("e#ZarAt")) {
 

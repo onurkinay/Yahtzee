@@ -3,8 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
 
-bağlandıktan sonra ekrana gelen nickname ekranı kapatılınca connect server ekranı gelmiyor
-port girilsin
  */
 package com.onurkinay.yahtzee;
 
@@ -1333,6 +1331,7 @@ public class Game extends javax.swing.JFrame {
     }
     //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="sunucu kapatması durumunda">
     public void closedServer() throws InterruptedException {
         JOptionPane.showMessageDialog(this,
                 "Server is closed");
@@ -1342,16 +1341,17 @@ public class Game extends javax.swing.JFrame {
         myClient.Close();
         myClient = null;
         this.setTitle("No connection... " + title);
-
+        
         findAMatch.setEnabled(false);
-
+        
         connectServer.setText("Connect Server");
         connectServer.getAccessibleContext().setAccessibleDescription("connect");
         sunucuVarmi = false;
-
+        
         jLabel8.setText("Disconnected from server.");
         return;
     }
+//</editor-fold>
 
     /**
      * @param args the command line arguments
