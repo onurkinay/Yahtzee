@@ -108,7 +108,7 @@ class ClientListenThread extends Thread {
                         if (mac.player2 == -1) {
                             mac.player2 = this.client.id;
                             mac.player2Name = playerName;
-                            mac.durum = 1;
+                           
                             FrmServer.maclarModel.addElement("Match[" + mac.id + "] Players: " + mac.player1Name + " <-> " + mac.player2Name);
 
                             this.client.SendMessage("foundPlayerF#" + mac.player1 + "#" + mac.player1Name);
