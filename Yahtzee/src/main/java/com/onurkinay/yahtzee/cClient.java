@@ -110,13 +110,13 @@ class ClientListenThread extends Thread {
                     main.panel.connectServer.setEnabled(false);
                 }else if(msg.toString().contains("server-is-closed")  ){//sunucu kendini kapatırsa
                         main.panel.closedServer();
-                }else if (msg.toString().contains("e#ZarAt")) {
+                }else if (msg.toString().contains("ZarAt")) {
 
                     System.out.println("düşman zar atti");
 
                     main.panel.zarlariAt(2);
 
-                } else if (msg.toString().contains("DusmanZarlar")) {
+                } else if (msg.toString().contains("RakipZarlar")) {
 
                     System.out.println("düşman zarlari geldi"); 
                     String zarlar = s.substring(s.indexOf("[") + 1, s.indexOf("]")); 
@@ -134,7 +134,7 @@ class ClientListenThread extends Thread {
                     String zar = s.substring(s.indexOf("[") + 1, s.indexOf("]"));
                     main.panel.zarIsleri(zar + "-" + "2");
 
-                } else if (msg.toString().contains("myturn")) {
+                } else if (msg.toString().contains("siraBende")) {
 
                     System.out.println("sıra bende"); 
                     int secilen = Integer.parseInt(s.substring(s.indexOf("[") + 1, s.indexOf("]")));

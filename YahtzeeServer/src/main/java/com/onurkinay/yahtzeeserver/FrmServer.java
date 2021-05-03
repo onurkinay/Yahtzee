@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel; 
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -19,7 +19,7 @@ public class FrmServer extends javax.swing.JFrame {
 
     public static Server myserver;
     public static ArrayList<Match> maclar = new ArrayList<>();
-    public static DefaultListModel clientMessagesModel;
+    public static DefaultListModel maclarModel;
     public static DefaultListModel clientsConnectedModel;
 
     /**
@@ -27,9 +27,9 @@ public class FrmServer extends javax.swing.JFrame {
      */
     public FrmServer() {
         initComponents();
-        
-        clientMessagesModel = new DefaultListModel();
-        lst_clientMessages.setModel(clientMessagesModel);
+
+        maclarModel = new DefaultListModel();
+        lst_maclar.setModel(maclarModel);
         clientsConnectedModel = new DefaultListModel();
         lst_clientsConnected.setModel(clientsConnectedModel);
 
@@ -48,7 +48,7 @@ public class FrmServer extends javax.swing.JFrame {
 
         btn_start = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lst_clientMessages = new javax.swing.JList<>();
+        lst_maclar = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         lst_clientsConnected = new javax.swing.JList<>();
 
@@ -63,12 +63,12 @@ public class FrmServer extends javax.swing.JFrame {
         });
         getContentPane().add(btn_start, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 180, -1));
 
-        lst_clientMessages.addMouseListener(new java.awt.event.MouseAdapter() {
+        lst_maclar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lst_clientMessagesMouseClicked(evt);
+                lst_maclarMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(lst_clientMessages);
+        jScrollPane1.setViewportView(lst_maclar);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, 290, 360));
 
@@ -96,15 +96,16 @@ public class FrmServer extends javax.swing.JFrame {
             }
             this.myserver = null;
             setTitle("SERVER IS STOPPED - Yahtzee");
-            
+
             btn_start.setText("Start");
         }
         //stop code
     }//GEN-LAST:event_btn_startActionPerformed
 
-    private void lst_clientMessagesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lst_clientMessagesMouseClicked
-       
-    }//GEN-LAST:event_lst_clientMessagesMouseClicked
+    private void lst_maclarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lst_maclarMouseClicked
+
+    }//GEN-LAST:event_lst_maclarMouseClicked
+ 
 
     /**
      * @param args the command line arguments
@@ -145,7 +146,7 @@ public class FrmServer extends javax.swing.JFrame {
     private javax.swing.JButton btn_start;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList<String> lst_clientMessages;
     private javax.swing.JList<String> lst_clientsConnected;
+    private javax.swing.JList<String> lst_maclar;
     // End of variables declaration//GEN-END:variables
 }

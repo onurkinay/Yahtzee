@@ -80,10 +80,7 @@ public class Server {
         
     }
     
-    public void MessageReceived(Object msg)
-    {
-        FrmServer.clientMessagesModel.addElement(msg.toString());
-    }
+    
     
      
     

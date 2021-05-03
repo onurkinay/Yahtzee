@@ -355,7 +355,7 @@ public class Game extends javax.swing.JFrame {
                                 } catch (InterruptedException ex) {
                                     Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                mesajlas("yourTurn[" + secilen + "]");
+                                mesajlas("siraSende[" + secilen + "]");
                                 secilen = -1;
 
                                 tabloTemizle();
@@ -390,7 +390,7 @@ public class Game extends javax.swing.JFrame {
 
         if (!sonKarar) {
 
-            mesajlas("e#zarAt");
+            mesajlas("zarAt");
             macDurumu = true;
             try {
                 zarlariAt(1);
