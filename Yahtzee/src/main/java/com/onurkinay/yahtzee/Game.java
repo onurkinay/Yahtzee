@@ -569,7 +569,7 @@ public class Game extends javax.swing.JFrame {
 
         if (tur < 3) {
             tur++;
-            jLabel7.setText("Tur sayısı: " + tur);
+            jLabel7.setText("Lap : " + tur);
             /*   for (Component gelenler : oyuncu.getComponents()) {
             if (gelenler instanceof JLabel) {
             gelenler.removeMouseListener(ortaZarMouse);
@@ -618,7 +618,7 @@ public class Game extends javax.swing.JFrame {
 
                             Calculate(player);
                             if (tur >= 3) {
-                                jLabel7.setText("Tur sayısı bitti");
+                                jLabel7.setText("3 rolled dice already");
                                 zarAt.setEnabled(false);
                                 if (turn) {
 
@@ -651,7 +651,7 @@ public class Game extends javax.swing.JFrame {
 
                             if (tur >= 3) {
                                 sonKarar = false;
-                                jLabel7.setText("Tur sayısı bitti");
+                                jLabel7.setText("3 rolled dice already");
                                 for (Component img : zarlar) {
 
                                     img.setLocation(Integer.parseInt(img.getAccessibleContext().getAccessibleName()), 30);

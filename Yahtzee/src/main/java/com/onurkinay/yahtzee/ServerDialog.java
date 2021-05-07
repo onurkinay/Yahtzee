@@ -36,7 +36,7 @@ public class ServerDialog extends JDialog implements ActionListener {
 
         super(parent, "Server giriniz", true);
         setResizable(false);
-        String[] resmiServerlar = {"yahtzee.onurkinay.com.tr", "127.0.0.1"};
+        String[] resmiServerlar = {"us-yahtzee.onurkinay.com.tr","eu-yahtzee.onurkinay.com.tr" ,"127.0.0.1"};
 
         Point loc = parent.getLocation();
         setLocation(loc.x + 180, loc.y + 180);
