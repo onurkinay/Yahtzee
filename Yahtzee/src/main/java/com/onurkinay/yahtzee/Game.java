@@ -569,6 +569,7 @@ public class Game extends javax.swing.JFrame {
 
         if (tur < 3) {
             tur++;
+            zarAt.setEnabled(false);
             jLabel7.setText("Lap : " + tur);
             /*   for (Component gelenler : oyuncu.getComponents()) {
             if (gelenler instanceof JLabel) {
@@ -610,12 +611,12 @@ public class Game extends javax.swing.JFrame {
                     }
                     i++;
                     if (i >= 10) {
-
                         timer.cancel();
                         if (player == 1) {
 
                             mesajlas("GelenZarlar[" + gelenZarlar() + "]");
 
+                            zarAt.setEnabled(true);
                             Calculate(player);
                             if (tur >= 3) {
                                 jLabel7.setText("3 rolled dice already");
@@ -1335,19 +1336,19 @@ public class Game extends javax.swing.JFrame {
     public void closedServer() throws InterruptedException {
         JOptionPane.showMessageDialog(this,
                 "Server is closed");
-        
+
         restartGame();
-        
+
         myClient.Close();
         myClient = null;
         this.setTitle("No connection... " + title);
-        
+
         findAMatch.setEnabled(false);
-        
+
         connectServer.setText("Connect Server");
         connectServer.getAccessibleContext().setAccessibleDescription("connect");
         sunucuVarmi = false;
-        
+
         jLabel8.setText("Disconnected from server.");
         return;
     }
